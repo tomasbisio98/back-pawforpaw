@@ -17,8 +17,9 @@ export class ProductsService {
     limit: number,
     status?: boolean,
   ): Promise<Products[]> {
+    const where = status !== undefined ? { status } : {};
     return this.productRepo.find({
-      where: { status },
+      where,
       skip: (page - 1) * limit,
       take: limit,
     });
