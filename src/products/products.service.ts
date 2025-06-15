@@ -34,6 +34,11 @@ export class ProductsService {
     return product;
   }
 
+  //Obtener productos por perrito (dogId)
+  async findAllByDog(dogId: number): Promise<Products[]> {
+    return this.productRepo.find({ where: { dogId } });
+  }
+
   // Crear producto nuevo y asociarlo a su categoría
   async createProduct(
     data: Partial<Products>,
@@ -43,7 +48,8 @@ export class ProductsService {
       name: data.name,
       price: data.price,
       imgUrl: data.imgUrl || 'https://example.com/default.jpg',
-      status: data.status,
+      status: data.status ?? true,
+      dogId: data.dogId,
     });
 
     const saved = await this.productRepo.save(newProduct);
