@@ -1,0 +1,57 @@
+[  {
+    "name": "Milka",
+    "sex": "H",
+    "imgUrl": "",
+    "description": "Perrita bulldog francés rescatada de la autopista",
+    "city": "Bogotá",
+    "status": true
+  },{
+    "name": "Ateneo",
+    "sex": "M",
+    "imgUrl": "",
+    "description": "Sin raza de 3 años muy amigable",
+    "city": "Medellín",
+    "status": true
+  },{
+    "name": "Jaimito",
+    "sex": "H",
+    "imgUrl": "",
+    "description": "Perrita muy dulce y amigable con otros perritos",
+    "city": "Bogotá",
+    "status": true
+  },{
+    "name": "Sweet",
+    "sex": "M",
+    "imgUrl": "",
+    "description": "Perro adulto en busca de familia hace 5 meses",
+    "city": "Valle",
+    "status": true
+  },{
+    "name": "Felipe",
+    "sex": "H",
+    "imgUrl": "",
+    "description": "Perrita guardiana",
+    "city": "Bogotá",
+    "status": true
+  },{
+    "name": "Mateo",
+    "sex": "H",
+    "imgUrl": "",
+    "description": "Perrito muy mimoso",
+    "city": "Costa Azul",
+    "status": true
+  },{
+    "name": "Mirko",
+    "sex": "H",
+    "imgUrl": "",
+    "description": "Perrita bulldog francés rescatada de la autopista",
+    "city": "Medellín",
+    "status": true
+  },{
+    "name": "Furia",
+    "sex": "H",
+    "imgUrl": "",
+    "description": "Perrito en busca de hogar responsable",
+    "city": "Bogotá",
+    "status": true
+  }]
