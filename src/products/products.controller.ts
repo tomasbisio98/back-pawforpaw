@@ -3,13 +3,12 @@ import {
   Controller,
   Delete,
   Get,
-  NotFoundException,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
   Query,
 } from '@nestjs/common';
-import { Product } from './product.interface';
 import { CreateProductDto } from './dto/createProduct.dto';
 import { ProductsService } from './products.service';
 import { UpdateProductDto } from './dto/updateProduct.dto';
@@ -20,46 +19,41 @@ export class ProductsController {
 
   //  Obtener lista paginada de productos
   @Get()
-  getProducts(@Query('page') page?: string, @Query('limit') limit?: string) {
+  getProducts(
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+    @Query('status') status?: string,
+  ) {
     const pageNum = Number(page) || 1;
     const limitNum = Number(limit) || 5;
-    return this.productsService.getProducts(pageNum, limitNum);
+    const statusBool = status === 'true';
+    return this.productsService.getProducts(pageNum, limitNum, statusBool);
   }
 
   // Obtener un solo producto por su ID ( GET /products/:id )
   @Get(':id')
-  findOne(@Param('id') id: string): Product {
-    const product = this.productsService.findOne(id);
-    if (!product) {
-      throw new NotFoundException('Producto no encontrado');
-    }
-    return product;
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
+    return this.productsService.getProductById(id);
   }
 
   // POST Crear un nuevo producto asociado a un perrito
   @Post()
-  create(@Body() dto: CreateProductDto): Product {
-    return this.productsService.create(dto);
+  create(@Body() product: CreateProductDto) {
+    return this.productsService.createProduct(product);
   }
 
   // Actualizar un producto por ID (Put/products/:id)
   @Put(':id')
-  update(@Param('id') id: string, @Body() dto: UpdateProductDto): Product {
-    try {
-      return this.productsService.update(id, dto);
-    } catch {
-      throw new NotFoundException('Producto no encontrado para actualizar');
-    }
+  update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() data: UpdateProductDto,
+  ) {
+    return this.productsService.updateProduct(id, data);
   }
 
   // Eliminar un producto por ID (DELETE /products/:id)
   @Delete(':id')
-  delete(@Param('id') id: string): { id: string } {
-    try {
-      this.productsService.delete(id);
-      return { id };
-    } catch {
-      throw new NotFoundException('PProducto no encontrado para eliminar');
-    }
+  delete(@Param('id', ParseUUIDPipe) id: string) {
+    return this.productsService.deactivateProduct(id);
   }
 }
