@@ -12,7 +12,7 @@ const config: DataSourceOptions = {
   database: `${process.env.DB_NAME}`,
   entities: ['dist/**/*.entity{.ts,.js}'],
   migrations: ['dist/migrations/*{.ts,.js}'],
-  dropSchema: true,
+  dropSchema: true, // true borraría todo en cada inicio
   synchronize: true,
 };
 

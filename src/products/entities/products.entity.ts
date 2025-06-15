@@ -16,4 +16,7 @@ export class Products {
 
   @Column({ default: true })
   status: boolean;
+
+  @Column()
+  dogId: number;
 }
