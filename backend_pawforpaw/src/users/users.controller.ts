@@ -1,34 +1,53 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { Controller, Get, Delete, Put, Param, Body, HttpCode, Query, UseGuards, ParseUUIDPipe } from '@nestjs/common';
+import { UserService } from './users.service';
+import { validateUser } from '../utils/validate';
+import { AuthGuard } from '../auth/guards/auth.guard';
+import { UsersDbService } from './usersDb.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../decorators/role/decorators.role';
+import { Role } from '../enum/roles.enum';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth()
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
 
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
-  }
+  constructor(
+    private readonly usersService: UserService,
+    private readonly usersDbService: UsersDbService,
+  ) {}
 
-  @Get()
-  findAll() {
-    return this.usersService.findAll();
-  }
+  
+  @HttpCode(200)
+  @Get('/list')
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
+  getUsers(@Query('page') page: number, @Query('limit') limit: number) {
+    return this.usersService.getUsers(page, limit);
+  };
 
+  @HttpCode(200)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
-  }
+  @UseGuards(AuthGuard)
+  getUserById(@Param('id', ParseUUIDPipe) id: string) {
+    return this.usersService.getById(id);
+  };
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
-  }
+  @HttpCode(200)
+  @Put(':id')
+  @UseGuards(AuthGuard)
+  update(@Param('id', ParseUUIDPipe) id: string, @Body() updateUser: CreateUserDto) {
+    if (validateUser(updateUser)) {
+      return this.usersService.update(id, updateUser);
+    }
+    return 'Usuario no válido';
+  };
 
+  @HttpCode(200)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
-  }
-}
+  @UseGuards(AuthGuard)
+  remove(@Param('id', ParseUUIDPipe) id: string) {
+    return this.usersService.remove(id);
+  };
+};
