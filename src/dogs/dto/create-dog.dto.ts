@@ -1,28 +1,22 @@
-import {
-  IsString,
-  IsBoolean,
-  IsNumber,
-  IsUrl,
-  IsOptional,
-} from 'class-validator';
+import { IsString, IsBoolean, IsUrl, IsOptional } from 'class-validator';
 
 export class CreateDogDto {
   @IsString()
   name: string;
 
-  @IsNumber()
-  age: number;
-
   @IsString()
-  breed: string;
+  sex: 'M' | 'H';
 
-  @IsBoolean()
-  @IsOptional()
-  status?: boolean;
+  @IsUrl()
+  imgUrl: string;
 
   @IsString()
   description: string;
 
-  @IsUrl()
-  imgUrl: string;
+  @IsString()
+  city: string;
+
+  @IsBoolean()
+  @IsOptional()
+  status?: boolean;
 }

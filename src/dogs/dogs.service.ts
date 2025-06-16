@@ -17,7 +17,7 @@ export class DogsService {
   }
 
   async findOne(id: string): Promise<Dog> {
-    const dog = await this.dogRepository.findOneBy({ id });
+    const dog = await this.dogRepository.findOneBy({ dogId: id });
     if (!dog) {
       throw new NotFoundException(`Dog with id ${id} not found`);
     }
@@ -31,7 +31,7 @@ export class DogsService {
 
   async update(id: string, updateDogDto: UpdateDogDto): Promise<Dog> {
     const dog = await this.dogRepository.preload({
-      id,
+      dogId: id,
       ...updateDogDto,
     });
 
