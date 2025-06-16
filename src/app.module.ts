@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+<<<<<<< Updated upstream
 import { ProductsModule } from './products/products.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -18,5 +19,12 @@ import typeorm from './config/typeorm';
     }),
     FileModule,
   ],
+=======
+import { ProductosModule } from './products/products.module';
+import { DogsModule } from './dogs/dogs.module';
+
+@Module({
+  imports: [ProductosModule, DogsModule],
+>>>>>>> Stashed changes
 })
 export class AppModule {}
