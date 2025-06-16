@@ -62,6 +62,8 @@ export class UserRepository {
             throw new NotFoundException(`Usuario con id ${id} no encontrado`);
         }
         
+
+        
         const { password, isAdmin, ...userWithoutPassword } = updateUser;
         
         return userWithoutPassword;
