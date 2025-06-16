@@ -1,22 +1,25 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
-@Entity({ name: 'Products' })
-export class Products {
+@Entity()
+export class Dog {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
   name: string;
 
-  @Column('decimal', { precision: 10, scale: 2 })
-  price: number;
+  @Column()
+  age: number;
 
-  @Column({ nullable: true })
-  imgUrl: string;
+  @Column()
+  breed: string;
 
   @Column({ default: true })
   status: boolean;
 
+  @Column({ type: 'text' })
+  description: string;
+
   @Column()
-  dogId: number;
+  imgUrl: string;
 }
