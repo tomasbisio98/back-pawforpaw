@@ -1,25 +1,29 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { DonationDetailDog } from 'src/entities/donation-detail-dog.entity';
 
-@Entity()
+@Entity('dogs')
 export class Dog {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  dogId: string;
 
-  @Column()
+  @Column({ length: 50 })
   name: string;
 
-  @Column()
-  age: number;
+  @Column({ type: 'enum', enum: ['M', 'H'] })
+  sex: 'M' | 'H';
 
-  @Column()
-  breed: string;
+  @Column({ length: 50 })
+  imgUrl: string;
 
-  @Column({ default: true })
-  status: boolean;
-
-  @Column({ type: 'text' })
+  @Column({ length: 255 })
   description: string;
 
+  @Column({ length: 50 })
+  city: string;
+
   @Column()
-  imgUrl: string;
+  status: boolean;
+
+  @OneToMany(() => DonationDetailDog, (dd) => dd.dog)
+  donationDetailDogs: DonationDetailDog[];
 }

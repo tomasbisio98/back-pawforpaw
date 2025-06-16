@@ -14,14 +14,14 @@ export class FilesService {
 
   // Sube una imagen y la asigna al producto
   async uploadImage(file: Express.Multer.File, productId: string) {
-    const product = await this.productsRepository.findOneBy({ id: productId });
+    const product = await this.productsRepository.findOneBy({ productId });
     if (!product) {
       throw new NotFoundException('Product not found');
     }
 
     const uploadResponse = await this.fileRepository.uploadImage(file);
 
-    await this.productsRepository.update(product.id, {
+    await this.productsRepository.update(productId, {
       imgUrl: uploadResponse.url,
     });
 
