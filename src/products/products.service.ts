@@ -3,12 +3,6 @@ import { Products } from './entities/products.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-<<<<<<< Updated upstream
-=======
-// import { v4 as uuidv4 } from 'uuid';
-import { CreateProductDto } from './dto/createProduct.dto';
-import { UpdateProductDto } from './dto/updateProduct.dto';
->>>>>>> Stashed changes
 
 @Injectable()
 export class ProductsService {
