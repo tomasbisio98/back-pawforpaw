@@ -4,10 +4,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { FileModule } from './file/file.module';
 import typeorm from './config/typeorm';
+import { DogsModule } from './dogs/dogs.module';
+import { SeedModule } from './seeder/seeder.module';
 
 @Module({
   imports: [
     ProductsModule,
+    SeedModule,
+    DogsModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [typeorm],
