@@ -7,7 +7,7 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class DogsService {
-    constructor(
+  constructor(
     @InjectRepository(Dog)
     private readonly dogRepository: Repository<Dog>,
   ) {}
@@ -15,7 +15,7 @@ export class DogsService {
   async findAll(): Promise<Dog[]> {
     return await this.dogRepository.find();
   }
-  
+
   async findOne(id: string): Promise<Dog> {
     const dog = await this.dogRepository.findOneBy({ id });
     if (!dog) {
@@ -36,7 +36,7 @@ export class DogsService {
     });
 
     if (!dog) {
-      throw new NotFoundException(`No fue encontrado un perro con este ${id}`)
+      throw new NotFoundException(`No fue encontrado un perro con este ${id}`);
     }
     return await this.dogRepository.save(dog);
   }
