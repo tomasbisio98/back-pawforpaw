@@ -1,5 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  ManyToMany,
+  JoinColumn,
+} from 'typeorm';
 import { DonationDetail } from './donation-detail.entity';
+import { User } from 'src/users/users.entity';
 
 @Entity('donations')
 export class Donation {
@@ -21,6 +29,10 @@ export class Donation {
   })
   status: string;
 
-  @OneToMany(() => DonationDetail, (dd) => dd.donation)
+  @OneToMany(() => DonationDetail, (detail) => detail.donation)
   donationDetails: DonationDetail[];
+
+  @ManyToMany(() => User, (user: User) => user.donations)
+  @JoinColumn({ name: 'userId' })
+  user: User;
 }

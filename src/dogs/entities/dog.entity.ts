@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { DonationDetailDog } from 'src/entities/donation-detail-dog.entity';
+import { DonationDetailDogs } from 'src/entities/donation-detail-dog.entity';
 
 @Entity('dogs')
 export class Dog {
@@ -24,6 +24,6 @@ export class Dog {
   @Column()
   status: boolean;
 
-  @OneToMany(() => DonationDetailDog, (dd) => dd.dog)
-  donationDetailDogs: DonationDetailDog[];
+  @OneToMany(() => DonationDetailDogs, (dd) => dd.dog)
+  donationDetailDogs: DonationDetailDogs[];
 }
