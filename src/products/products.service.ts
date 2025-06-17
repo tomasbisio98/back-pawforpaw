@@ -28,34 +28,28 @@ export class ProductsService {
   //Obtener un solo producto por ID
   async getProductById(id: string): Promise<Partial<Products>> {
     const product = await this.productRepo.findOne({
-      where: { id },
+      where: { productId: id },
     });
     if (!product) throw new NotFoundException('Producto no encontrado');
     return product;
   }
 
-  //Obtener productos por perrito (dogId)
-  async findAllByDog(dogId: number): Promise<Products[]> {
-    return this.productRepo.find({ where: { dogId } });
-  }
-
   // Crear producto nuevo y asociarlo a su categoría
   async createProduct(
     data: Partial<Products>,
-  ): Promise<{ id: string; message: string }> {
+  ): Promise<{ productId: string; message: string }> {
     const newProduct = this.productRepo.create({
-      id: uuidv4(),
+      productId: uuidv4(),
       name: data.name,
       price: data.price,
       imgUrl: data.imgUrl || 'https://example.com/default.jpg',
       status: data.status ?? true,
-      dogId: data.dogId,
     });
 
     const saved = await this.productRepo.save(newProduct);
     return {
       message: 'Producto creado exitosamente',
-      id: saved.id,
+      productId: saved.productId,
     };
   }
 
@@ -64,7 +58,9 @@ export class ProductsService {
     id: string,
     data: Partial<Products>,
   ): Promise<{ id: string; message: string }> {
-    const product = await this.productRepo.findOne({ where: { id } });
+    const product = await this.productRepo.findOne({
+      where: { productId: id },
+    });
     if (!product) throw new NotFoundException('Producto no encontrado');
     const updated = Object.assign(product, data);
     await this.productRepo.save(updated);
@@ -78,7 +74,9 @@ export class ProductsService {
   async deactivateProduct(
     id: string,
   ): Promise<{ id: string; message: string }> {
-    const product = await this.productRepo.findOne({ where: { id } });
+    const product = await this.productRepo.findOne({
+      where: { productId: id },
+    });
     if (!product) {
       throw new NotFoundException('Producto no encontrado');
     }

@@ -6,12 +6,15 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { FileModule } from './file/file.module';
 import typeorm from './config/typeorm';
+import { DogsModule } from './dogs/dogs.module';
+import { SeedModule } from './seeder/seeder.module';
 import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
     ProductsModule,
-    UsersModule,
+    SeedModule,
+    DogsModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [typeorm],

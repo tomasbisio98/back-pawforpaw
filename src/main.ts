@@ -6,6 +6,8 @@ import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // Pipe Global de validacion
+  app.useGlobalPipes(new ValidationPipe());
   // Middleware global para registrar todas las solicitudes HTTP
   app.use(loggerGlobal);
 
