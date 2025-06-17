@@ -1,10 +1,21 @@
-import { NextFunction } from 'express';
+import { Injectable, NestMiddleware } from '@nestjs/common';
+import {NextFunction, Request, Response } from 'express';
+
+@Injectable()
+
+export class LoggerMiddleware implements NestMiddleware {
+    use(req: Request, res: Response, next: NextFunction) {
+        console.log(
+            `Estás ejecutando un método ${req.method} en la ruta ${req.url}`
+        );
+        next();
+    }     
+};
+
 
 export function loggerGlobal(req: Request, res: Response, next: NextFunction) {
-  const fecha = new Date().toLocaleString();
-  console.log(
-    fecha,
-    `Estas ejecutando un metodo ${req.method} en la ruta ${req.url}`,
-  );
-  next(); // Continua con la ejecución
-}
+    console.log(
+        `Estás ejecutando un método ${req.method} en la ruta ${req.url}`
+    );
+    next();
+}  

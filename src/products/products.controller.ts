@@ -30,11 +30,6 @@ export class ProductsController {
     return this.productsService.getProducts(pageNum, limitNum, statusBool);
   }
 
-  @Get('dog/:dogId')
-  getByDogId(@Param('dogId') dogId: number) {
-    return this.productsService.findAllByDog(dogId);
-  }
-
   // Obtener un solo producto por su ID ( GET /products/:id )
   @Get(':id')
   findOne(@Param('id', ParseUUIDPipe) id: string) {
