@@ -81,4 +81,12 @@ export class User {
 
   @OneToMany(() => Donation, (donation) => donation.user)
   donations: Donation[];
+
+  // Agrego estos dos campos para el proceso de recuperación de contraseña
+
+  @Column({ type: 'varchar', nullable: true })
+  resetPasswordToken: string | null;
+
+  @Column({ type: 'timestamp', nullable: true })
+  resetPasswordExpires: Date | null;
 }
