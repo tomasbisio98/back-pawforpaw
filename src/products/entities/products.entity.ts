@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { DonationDetail } from 'src/entities/donation-detail.entity';
+import { DonationDetailDogs } from 'src/entities/donation-detail-dog.entity';
 
 @Entity('products')
 export class Products {
@@ -20,4 +21,7 @@ export class Products {
 
   @OneToMany(() => DonationDetail, (dd) => dd.product)
   donationDetails: DonationDetail[];
+
+  @OneToMany(() => DonationDetailDogs, (ddd) => ddd.product)
+  donationDetailsDogs: DonationDetailDogs[];
 }
