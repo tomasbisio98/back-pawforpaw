@@ -1,10 +1,11 @@
-import { IsString, IsBoolean, IsUrl, IsOptional } from 'class-validator';
+import { IsString, IsBoolean, IsUrl, IsOptional, IsIn } from 'class-validator';
 
 export class CreateDogDto {
   @IsString()
   name: string;
 
   @IsString()
+  @IsIn(['M', 'H'], { message: 'Sex must be either "M" or "H"' })
   sex: 'M' | 'H';
 
   @IsUrl()
