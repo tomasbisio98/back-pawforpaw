@@ -1,0 +1,11 @@
+services:
+  backend:
+    build: .
+    container_name: pawforpaw-backend
+    ports:
+      - '3005:3000'
+    env_file:
+      - .env.production
+    volumes:
+      - .:/app
+    command: npm run start:prod
