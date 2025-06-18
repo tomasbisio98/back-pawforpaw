@@ -3,7 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Dog } from 'src/dogs/entities/dog.entity';
 import { Products } from 'src/products/entities/products.entity';
 import { Repository } from 'typeorm';
-import { dogs, products } from './seeder';
+import { dogs, products, users } from './seeder';
+import { User } from 'src/users/users.entity';
 @Injectable()
 export class SeedService implements OnApplicationBootstrap {
   constructor(
@@ -11,11 +12,14 @@ export class SeedService implements OnApplicationBootstrap {
     private readonly dogRepository: Repository<Dog>,
     @InjectRepository(Products)
     private readonly productRepository: Repository<Products>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
   ) {}
 
   async onApplicationBootstrap() {
     const dogsCount = await this.dogRepository.count();
     const productsCount = await this.productRepository.count();
+    const usersCount = await this.userRepository.count();
 
     if (dogsCount === 0) {
       await this.dogRepository.save(dogs);
@@ -25,6 +29,11 @@ export class SeedService implements OnApplicationBootstrap {
     if (productsCount === 0) {
       await this.productRepository.save(products);
       console.log('📦 Seed: 15 productos insertados');
+    }
+
+    if (usersCount === 0) {
+      await this.userRepository.save(users);
+      console.log('👩🏻‍💻 Seed: 15 usuarios insertados');
     }
   }
 }

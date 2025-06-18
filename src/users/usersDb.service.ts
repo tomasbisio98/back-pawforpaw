@@ -5,11 +5,11 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class UsersDbService {
-    constructor(
-        @InjectRepository(User) private usersRepository: Repository<User>,
-    ){}
+  constructor(
+    @InjectRepository(User) private usersRepository: Repository<User>,
+  ) {}
 
-    saveUser(user: Partial<User>) {
-        this.usersRepository.save(user);
-    };
-};
+  saveUser(user: Partial<User>) {
+    this.usersRepository.save(user);
+  }
+}

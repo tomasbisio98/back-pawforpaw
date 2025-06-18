@@ -4,25 +4,34 @@ import {
   Column,
   ManyToOne,
   OneToMany,
+  JoinColumn,
 } from 'typeorm';
 import { Products } from 'src/products/entities/products.entity';
-import { DonationDetailDog } from './donation-detail-dog.entity';
+import { DonationDetailDogs } from './donation-detail-dog.entity';
 import { Donation } from './donation.entity';
 
-@Entity('donationDetail')
+@Entity()
 export class DonationDetail {
   @PrimaryGeneratedColumn('uuid')
   donationDetailId: string;
 
-  @ManyToOne(() => Donation, (d) => d.donationDetails)
+  @ManyToOne(() => Donation, (donation) => donation.donationDetails)
+  @JoinColumn({ name: 'donationId' })
   donation: Donation;
 
-  @ManyToOne(() => Products, (p) => p.donationDetails)
+  @Column()
+  donationId: string;
+
+  @ManyToOne(() => Products, (product) => product.donationDetails)
+  @JoinColumn({ name: 'product_id' })
   product: Products;
 
-  @Column({ type: 'decimal' })
+  @Column()
+  product_id: string;
+
+  @Column('decimal')
   price_unit: number;
 
-  @OneToMany(() => DonationDetailDog, (dd) => dd.donationDetail)
-  donationDetailDogs: DonationDetailDog[];
+  @OneToMany(() => DonationDetailDogs, (ddd) => ddd.donationDetail)
+  dogAssignments: DonationDetailDogs[];
 }

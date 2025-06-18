@@ -2,20 +2,19 @@ import { Controller, Post, Body } from '@nestjs/common';
 import { AuthService } from './auth.services';
 import { LoginUserDto } from '../users/dto/login-user.dto';
 import { CreateUserDto } from '../users/dto/create-user.dto';
-import { ApiTags } from '@nestjs/swagger';
 
-@Controller('auth')  
+@Controller('auth')
 export class AuthController {
-    constructor(private readonly authServices: AuthService) {}
+  constructor(private readonly authServices: AuthService) {}
 
-    @Post('signin')
-    signin(@Body() credentials: LoginUserDto) {
-        const { email, password } = credentials;
-        return this.authServices.signIn(email, password);
-    }
+  @Post('signin')
+  signin(@Body() credentials: LoginUserDto) {
+    const { email, password } = credentials;
+    return this.authServices.signIn(email, password);
+  }
 
-    @Post('signup')
-    signUp(@Body() user: CreateUserDto){
-        return this.authServices.signUp(user)
-    }
-};
+  @Post('signup')
+  signUp(@Body() user: CreateUserDto) {
+    return this.authServices.signUp(user);
+  }
+}

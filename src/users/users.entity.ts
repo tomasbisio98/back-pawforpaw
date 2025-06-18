@@ -1,74 +1,92 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn } from 'typeorm';
-
+import { Donation } from 'src/entities/donation.entity';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  OneToMany,
+} from 'typeorm';
 
 @Entity({
-    name: 'users'
+  name: 'users',
 })
 export class User {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column({
-        type: 'varchar',
-        length: 50,
-        nullable: false,
-    })
-    name: string;
+  @Column({
+    type: 'varchar',
+    length: 50,
+    nullable: false,
+  })
+  name: string;
 
-    @Column({
-        type: 'varchar',
-        length: 20,
-        unique: true,
-    })
-    dni: string;
+  @Column({
+    type: 'varchar',
+    length: 20,
+    unique: true,
+  })
+  dni: string;
 
-    @Column({
-        type: 'varchar',
-        length: 50,
-        nullable: false,
-        unique: true,
-    })
-    email: string;
+  @Column({
+    type: 'varchar',
+    length: 50,
+    nullable: false,
+    unique: true,
+  })
+  email: string;
 
-    @Column({
-        type: 'varchar',
-        nullable: false,
-    })
-    password: string;
+  @Column({
+    type: 'varchar',
+    nullable: false,
+  })
+  password: string;
 
-    @Column({
-        type: 'boolean',
-        default: false,
-    })
-    isAdmin: boolean;
+  @Column({
+    type: 'boolean',
+    default: false,
+  })
+  isAdmin: boolean;
 
-    @Column({
-        type: 'text',
-        default: 'https://drive.google.com/file/d/1cgd_yxHskzKR7u9bIOhpfYbX6BTGtt6l/view?usp=drive_link',
-    })
-    profileImgUrl: string;
+  @Column({
+    type: 'text',
+    default:
+      'https://drive.google.com/file/d/1cgd_yxHskzKR7u9bIOhpfYbX6BTGtt6l/view?usp=drive_link',
+  })
+  profileImgUrl: string;
 
-    @Column({
-        type: 'varchar',
-        length: 20,
-    })
-    phone: string;
+  @Column({
+    type: 'varchar',
+    length: 20,
+  })
+  phone: string;
 
-    @Column({
-        type: 'boolean',
-        default: true,
-    })
-    status: boolean;
+  @Column({
+    type: 'boolean',
+    default: true,
+  })
+  status: boolean;
 
-    @Column({
+  @Column({
     type: 'enum',
     enum: ['google', 'local'],
     default: 'local',
-    })
-    authProvider: 'google' | 'local';
+  })
+  authProvider: 'google' | 'local';
 
-    @CreateDateColumn({
-        type:'date',
-    })
-    createdAt: Date;
-};
+  @CreateDateColumn({
+    type: 'date',
+  })
+  createdAt: Date;
+
+  @OneToMany(() => Donation, (donation) => donation.user)
+  donations: Donation[];
+
+  // Agrego estos dos campos para el proceso de recuperación de contraseña
+
+  @Column({ type: 'varchar', nullable: true })
+  resetPasswordToken: string | null;
+
+  @Column({ type: 'timestamp', nullable: true })
+  resetPasswordExpires: Date | null;
+}
