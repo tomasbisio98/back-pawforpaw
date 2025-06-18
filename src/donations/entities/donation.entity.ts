@@ -5,6 +5,7 @@ import {
   OneToMany,
   ManyToMany,
   JoinColumn,
+  ManyToOne,
 } from 'typeorm';
 import { DonationDetail } from './donation-detail.entity';
 import { User } from 'src/users/users.entity';
@@ -32,7 +33,8 @@ export class Donation {
   @OneToMany(() => DonationDetail, (detail) => detail.donation)
   donationDetails: DonationDetail[];
 
-  @ManyToMany(() => User, (user: User) => user.donations)
+  //(una donación tiene un usuario)
+  @ManyToOne(() => User, (user: User) => user.donations)
   @JoinColumn({ name: 'userId' })
   user: User;
 }
