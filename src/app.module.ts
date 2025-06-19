@@ -10,6 +10,7 @@ import { DogsModule } from './dogs/dogs.module';
 import { SeedModule } from './seeder/seeder.module';
 import { JwtModule } from '@nestjs/jwt';
 import { RecoverModule } from './auth/recoverPassword/recover.module';
+import { DonationModule } from './donations/donations.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { RecoverModule } from './auth/recoverPassword/recover.module';
     UsersModule,
     AuthModule,
     RecoverModule,
+    DonationModule,
   ],
 })
 export class AppModule {}

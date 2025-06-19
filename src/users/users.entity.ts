@@ -1,4 +1,4 @@
-import { Donation } from 'src/entities/donation.entity';
+import { Donation } from 'src/donations/entities/donation.entity';
 import {
   Entity,
   Column,
