@@ -1,11 +1,14 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, UnauthorizedException } from '@nestjs/common';
 import { UserRepository } from '../users/users.repository';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { OAuth2Client } from 'google-auth-library';
 
 @Injectable()
 export class AuthService {
+  private googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
   constructor(
     private readonly usersRepository: UserRepository,
     private readonly jwtService: JwtService,
@@ -14,7 +17,6 @@ export class AuthService {
   async signIn(email: string, password: string) {
     const user = await this.usersRepository.getByEmail(email);
 
-    // Verificar si el usuario existe
     if (!user) {
       throw new BadRequestException('¡Credenciales inválidas!');
     }
@@ -28,10 +30,10 @@ export class AuthService {
     const userPayload = {
       sub: user.id,
       email: user.email,
-      isAdmin: user.isAdmin, // Uso correcto de isAdmin
+      isAdmin: user.isAdmin,
     };
 
-    const token = this.jwtService.sign(userPayload); // Corrección: this.jwtService
+    const token = this.jwtService.sign(userPayload);
 
     return {
       token,
@@ -62,5 +64,46 @@ export class AuthService {
     const { password, ...userWithoutPass } = user;
 
     return userWithoutPass;
+  }
+
+
+  async googleLogin(idToken: string) {
+    const ticket = await this.googleClient.verifyIdToken({
+      idToken,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+
+    if (!payload || !payload.email) {
+      throw new UnauthorizedException('Token de Google no válido');
+    }
+
+    const { email, name } = payload;
+
+    let user = await this.usersRepository.getByEmail(email);
+
+    if (!user) {
+      user = await this.usersRepository.createUser({
+        email,
+        name: name ?? 'Usuario Google',
+        password: '',
+        phone: '0000000000',
+        authProvider: 'google',
+      });
+    }
+
+    const userPayload = {
+      sub: user.id as string,
+      email: user.email as string,
+      isAdmin: user.isAdmin ?? false,
+    };
+
+    const token = this.jwtService.sign(userPayload);
+
+    return {
+      token,
+      message: '¡Autenticación con Google exitosa!',
+    };
   }
 }

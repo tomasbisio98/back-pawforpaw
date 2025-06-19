@@ -19,16 +19,23 @@ import { DonationModule } from './donations/donations.module';
     DogsModule,
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: '.env.development',
       load: [typeorm],
     }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => config.get('typeorm')!,
     }),
-    JwtModule.register({
+    JwtModule.registerAsync({
       global: true,
-      secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '60m' },
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => {
+        return {
+          secret: configService.get<string>('JWT_SECRET'),
+          signOptions: { expiresIn: '60m' },
+        };
+      },
     }),
     FileModule,
     UsersModule,
