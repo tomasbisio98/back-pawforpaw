@@ -9,6 +9,8 @@ import typeorm from './config/typeorm';
 import { DogsModule } from './dogs/dogs.module';
 import { SeedModule } from './seeder/seeder.module';
 import { JwtModule } from '@nestjs/jwt';
+import { RecoverModule } from './auth/recoverPassword/recover.module';
+import { DonationModule } from './donations/donations.module';
 
 @Module({
   imports: [
@@ -31,6 +33,8 @@ import { JwtModule } from '@nestjs/jwt';
     FileModule,
     UsersModule,
     AuthModule,
+    RecoverModule,
+    DonationModule,
   ],
 })
 export class AppModule {}
