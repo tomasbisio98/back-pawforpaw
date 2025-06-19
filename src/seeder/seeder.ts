@@ -35,7 +35,8 @@ export const dogs: CreateDogDto[] = [
     sex: 'H',
     city: 'Cartagena',
     description: 'Tranquilo y cariñoso.',
-    imgUrl: 'https://example.com/dogs/dog4.jpg',
+    imgUrl:
+      'https://res.cloudinary.com/dziccimdv/image/upload/v1750368912/qzbjainapl7efaunroc6.jpg',
     status: true,
   },
   {
