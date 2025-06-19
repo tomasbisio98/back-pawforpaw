@@ -25,7 +25,7 @@ export class ProductsController {
     @Query('status') status?: string,
   ) {
     const pageNum = Number(page) || 1;
-    const limitNum = Number(limit) || 5;
+    const limitNum = Number(limit) || 9;
     const statusBool = status === 'true';
     return this.productsService.getProducts(pageNum, limitNum, statusBool);
   }

@@ -5,6 +5,7 @@ import {
   Request,
   Get,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { DonationService } from './donations.service';
 import { CreateDonationDto } from './dto/createDonations.dto';
@@ -25,8 +26,14 @@ export class DonationController {
   // Obtener la donación del usuario actual
   @UseGuards(AuthGuard)
   @Get('mine')
-  getMyDonation(@Request() req) {
+  getMyDonation(
+    @Request() req,
+    @Query('page') page?: string,
+    @Query('limin') limit?: string,
+  ) {
+    const pageNum = Number(page) || 1;
+    const limitNum = Number(limit) || 9;
     const userId = req.user.userId;
-    return this.donationService.getDonationByUser(userId);
+    return this.donationService.getDonationByUser(userId, pageNum, limitNum);
   }
 }
