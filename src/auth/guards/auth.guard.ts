@@ -25,6 +25,7 @@ export class AuthGuard implements CanActivate {
 
       request.user = {
         ...user,
+        userId: user.sub,
         roles: user.isAdmin ? ['admin'] : ['user'],
       };
 
