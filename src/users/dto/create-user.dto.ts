@@ -15,10 +15,6 @@ export class CreateUserDto {
   @MaxLength(50, { message: '¡Name must not exceed 50 characters!' })
   name: string;
 
-  @IsNotEmpty({ message: '¡DNI is required!' })
-  @IsString({ message: '¡DNI must be a string!' })
-  dni: string;
-
   @IsNotEmpty({ message: '¡Email is required!' })
   @IsEmail({}, { message: '¡Email format is invalid!' })
   email: string;

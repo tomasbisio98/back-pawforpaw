@@ -17,4 +17,9 @@ export class AuthController {
   signUp(@Body() user: CreateUserDto) {
     return this.authServices.signUp(user);
   }
+
+  @Post('google')
+  googleLogin(@Body() body: { idToken: string }) {
+    return this.authServices.googleLogin(body.idToken);
+  }
 }

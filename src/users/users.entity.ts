@@ -23,13 +23,6 @@ export class User {
 
   @Column({
     type: 'varchar',
-    length: 20,
-    unique: true,
-  })
-  dni: string;
-
-  @Column({
-    type: 'varchar',
     length: 50,
     nullable: false,
     unique: true,
@@ -58,6 +51,7 @@ export class User {
   @Column({
     type: 'varchar',
     length: 20,
+    nullable: true,
   })
   phone: string;
 
