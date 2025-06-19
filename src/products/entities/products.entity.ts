@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { DonationDetail } from 'src/entities/donation-detail.entity';
-import { DonationDetailDogs } from 'src/entities/donation-detail-dog.entity';
+import { DonationDetail } from 'src/donations/entities/donation-detail.entity';
+import { DonationDetailDogs } from 'src/donations/entities/donation-detail-dog.entity';
 
 @Entity('products')
 export class Products {
