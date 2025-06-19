@@ -88,14 +88,13 @@ export class AuthService {
         email,
         name: name ?? 'Usuario Google',
         password: '',
-        dni: '0000000000',
         phone: '0000000000',
         authProvider: 'google',
       });
     }
 
     const userPayload = {
-      id: user.id as string,
+      sub: user.id as string,
       email: user.email as string,
       isAdmin: user.isAdmin ?? false,
     };
