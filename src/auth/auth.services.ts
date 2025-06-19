@@ -1,4 +1,8 @@
-import { Injectable, BadRequestException, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UserRepository } from '../users/users.repository';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
@@ -66,7 +70,6 @@ export class AuthService {
     return userWithoutPass;
   }
 
-
   async googleLogin(idToken: string) {
     const ticket = await this.googleClient.verifyIdToken({
       idToken,
@@ -94,8 +97,8 @@ export class AuthService {
     }
 
     const userPayload = {
-      sub: user.id as string,
-      email: user.email as string,
+      sub: user.id,
+      email: user.email,
       isAdmin: user.isAdmin ?? false,
     };
 
