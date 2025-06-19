@@ -25,6 +25,7 @@ export class User {
     type: 'varchar',
     length: 20,
     unique: true,
+    nullable: true,
   })
   dni: string;
 
@@ -58,6 +59,7 @@ export class User {
   @Column({
     type: 'varchar',
     length: 20,
+    nullable: true,
   })
   phone: string;
 

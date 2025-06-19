@@ -42,10 +42,10 @@ export class UserRepository {
     return user;
   }
 
-  async createUser(user: Partial<User>): Promise<Partial<User>> {
+  async createUser(user: Partial<User>): Promise<User> {
     const newUser = await this.usersRepository.save(user);
     const { password, isAdmin, ...userWithoutPassword } = newUser;
-    return userWithoutPassword;
+    return userWithoutPassword as User;
   }
 
   async update(
