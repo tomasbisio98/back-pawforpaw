@@ -1,7 +1,6 @@
 import { Injectable, BadRequestException, UnauthorizedException } from '@nestjs/common';
 import { UserRepository } from '../users/users.repository';
 import { CreateUserDto } from '../users/dto/create-user.dto';
-import { CreateGoogleUserDto } from '../users/dto/createGoogleUser.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { OAuth2Client } from 'google-auth-library';
