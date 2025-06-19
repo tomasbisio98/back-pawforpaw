@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { DonationDetailDogs } from 'src/entities/donation-detail-dog.entity';
+import { DonationDetailDogs } from 'src/donations/entities/donation-detail-dog.entity';
 
 @Entity('dogs')
 export class Dog {
