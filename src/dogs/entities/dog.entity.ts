@@ -12,7 +12,7 @@ export class Dog {
   @Column({ type: 'enum', enum: ['M', 'H'] })
   sex: 'M' | 'H';
 
-  @Column({ length: 50 })
+  @Column({ length: 250, nullable: true })
   imgUrl: string;
 
   @Column({ length: 255 })

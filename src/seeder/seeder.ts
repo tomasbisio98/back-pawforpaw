@@ -8,7 +8,8 @@ export const dogs: CreateDogDto[] = [
     sex: 'M',
     city: 'Bogotá',
     description: 'Muy amigable y juguetón.',
-    imgUrl: 'https://example.com/dogs/dog1.jpg',
+    imgUrl:
+      'https://img.canal1.com.co/wp-content/uploads/2022/05/06221850/Los-perros-criollos-gozan-de-mejor-salud.jpg?format=auto&width=1200',
     status: true,
   },
   {
@@ -16,7 +17,8 @@ export const dogs: CreateDogDto[] = [
     sex: 'H',
     city: 'Medellín',
     description: 'Perfecto para familias con niños.',
-    imgUrl: 'https://example.com/dogs/dog2.jpg',
+    imgUrl:
+      'https://blog.laikamascotas.cl/wp-content/uploads/2023/08/1686179.jpg',
     status: true,
   },
   {
@@ -24,7 +26,8 @@ export const dogs: CreateDogDto[] = [
     sex: 'M',
     city: 'Cali',
     description: 'Le encanta correr en el parque.',
-    imgUrl: 'https://example.com/dogs/dog3.jpg',
+    imgUrl:
+      'https://cloudfront-us-east-1.images.arcpublishing.com/elespectador/RLZTHM2WVBBNLKJAEILFK4KVEY.jpg',
     status: true,
   },
   {
