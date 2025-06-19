@@ -27,6 +27,7 @@ export class Donation {
   @Column({
     type: 'enum',
     enum: ['PENDING', 'COMPLETED', 'FAILED', 'CANCELLED'],
+    default: 'PENDING',
   })
   status: string;
 
