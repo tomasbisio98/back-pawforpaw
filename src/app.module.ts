@@ -11,6 +11,8 @@ import { SeedModule } from './seeder/seeder.module';
 import { JwtModule } from '@nestjs/jwt';
 import { RecoverModule } from './auth/recoverPassword/recover.module';
 import { DonationModule } from './donations/donations.module';
+import { NewsletterModule } from './newsletter/newsletter.module';
+import { mailerConfigFactory } from './config/mailer';
 
 @Module({
   imports: [
@@ -30,7 +32,7 @@ import { DonationModule } from './donations/donations.module';
       global: true,
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => {
+      useFactory: (configService: ConfigService) => {
         return {
           secret: configService.get<string>('JWT_SECRET'),
           signOptions: { expiresIn: '60m' },
@@ -42,6 +44,7 @@ import { DonationModule } from './donations/donations.module';
     AuthModule,
     RecoverModule,
     DonationModule,
+    NewsletterModule,
   ],
 })
 export class AppModule {}

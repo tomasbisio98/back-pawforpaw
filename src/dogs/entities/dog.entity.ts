@@ -21,7 +21,7 @@ export class Dog {
   @Column({ length: 50 })
   city: string;
 
-  @Column()
+  @Column({ default: true })
   status: boolean;
 
   @OneToMany(() => DonationDetailDogs, (dd) => dd.dog)

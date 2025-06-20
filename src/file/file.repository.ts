@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UploadApiResponse, v2 as cloudinary } from 'cloudinary'; // API de Cloudinary
-import * as toStream from 'buffer-to-stream'; // Convierte buffer a stream para envío
+import toStream from 'buffer-to-stream'; // Convierte buffer a stream para envío
 
 @Injectable()
 export class FileRepository {
@@ -11,6 +11,7 @@ export class FileRepository {
         { resource_type: 'auto' }, // Detecta automáticamente el tipo de archivo
         (error, result) => {
           if (error) {
+            // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
             reject(error);
           } else {
             resolve(result!); // Retorna resultado exitoso
