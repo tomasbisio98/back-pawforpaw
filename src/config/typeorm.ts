@@ -2,7 +2,7 @@ import { config as dotenvconfig } from 'dotenv';
 import { registerAs } from '@nestjs/config';
 import { DataSource, DataSourceOptions } from 'typeorm';
 
-dotenvconfig({ path: `.env.${process.env.NODE_ENV || 'development'}` });
+dotenvconfig({ path: `.env.${process.env.NODE_ENV || '.env.development'}` });
 
 const config: DataSourceOptions = process.env.DATABASE_URL
   ? {
