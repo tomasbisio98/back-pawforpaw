@@ -13,7 +13,7 @@ export class Products {
   @Column('decimal', { precision: 10, scale: 2 })
   price: number;
 
-  @Column({ length: 50 })
+  @Column({ length: 250 })
   imgUrl: string;
 
   @Column()

@@ -58,9 +58,11 @@ export class DonationService {
     };
   }
 
-  async getDonationByUser(userId: string) {
+  async getDonationByUser(userId: string, page: number, limit: number) {
     const donations = await this.donationRepo.find({
       where: { userId },
+      skip: (page - 1) * limit,
+      take: limit,
       relations: [
         'donationDetails',
         'donationDetails.product',
@@ -72,10 +74,27 @@ export class DonationService {
       },
     });
 
+    // Verifica que el usuario sí tenga donaciones.
     if (!donations || donations.length === 0) {
       throw new BadRequestException('No tienes donaciones registradas');
     }
 
-    return donations;
+    // Reestructura la respuesta
+    const simpleResponse = donations.flatMap((donations) =>
+      //flatMap sirve para "aplanar" listas anidadas
+      donations.donationDetails.flatMap((detail) =>
+        detail.dogAssignments.map((assigment) => ({
+          //Objeto simplificado por cada combinación producto + perro
+          donationId: donations.donationId,
+          fecha: donations.date,
+          producto: detail.product.name,
+          perrito: assigment.dog.name,
+          monto: parseFloat(donations.totalValue as any),
+          estado: donations.status,
+        })),
+      ),
+    );
+
+    return simpleResponse;
   }
 }
