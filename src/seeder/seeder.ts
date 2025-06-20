@@ -85,7 +85,7 @@ export const dogs: CreateDogDto[] = [
     city: 'Ibagué',
     description: 'Muy activo y curioso.',
     imgUrl: 'https://example.com/dogs/dog10.jpg',
-    status: true,
+    status: false,
   },
   {
     name: 'Thor',
@@ -93,7 +93,7 @@ export const dogs: CreateDogDto[] = [
     city: 'Popayán',
     description: 'Amante de los paseos largos.',
     imgUrl: 'https://example.com/dogs/dog11.jpg',
-    status: true,
+    status: false,
   },
   {
     name: 'Coco',
