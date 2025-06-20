@@ -13,8 +13,8 @@ export class ProductsService {
 
   // Listar productos con paginación
   async getProducts(
-    page: number,
-    limit: number,
+    page = 1,
+    limit = 20,
     status?: boolean,
   ): Promise<Products[]> {
     const where = status !== undefined ? { status } : {};

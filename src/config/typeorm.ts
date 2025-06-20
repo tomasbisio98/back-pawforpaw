@@ -11,6 +11,7 @@ const config: DataSourceOptions = process.env.DATABASE_URL
       synchronize: true,
       entities: ['dist/**/*.entity{.ts,.js}'],
       migrations: ['dist/migrations/*{.ts,.js}'],
+      dropSchema: true,
     }
   : {
       type: 'postgres',
@@ -22,6 +23,7 @@ const config: DataSourceOptions = process.env.DATABASE_URL
       synchronize: true,
       entities: ['dist/**/*.entity{.ts,.js}'],
       migrations: ['dist/migrations/*{.ts,.js}'],
+      dropSchema: true,
     };
 
 export default registerAs('typeorm', () => config);

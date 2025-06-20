@@ -35,7 +35,8 @@ export const dogs: CreateDogDto[] = [
     sex: 'H',
     city: 'Cartagena',
     description: 'Tranquilo y cariñoso.',
-    imgUrl: 'https://example.com/dogs/dog4.jpg',
+    imgUrl:
+      'https://res.cloudinary.com/dziccimdv/image/upload/v1750368912/qzbjainapl7efaunroc6.jpg',
     status: true,
   },
   {
@@ -84,7 +85,7 @@ export const dogs: CreateDogDto[] = [
     city: 'Ibagué',
     description: 'Muy activo y curioso.',
     imgUrl: 'https://example.com/dogs/dog10.jpg',
-    status: true,
+    status: false,
   },
   {
     name: 'Thor',
@@ -92,7 +93,7 @@ export const dogs: CreateDogDto[] = [
     city: 'Popayán',
     description: 'Amante de los paseos largos.',
     imgUrl: 'https://example.com/dogs/dog11.jpg',
-    status: true,
+    status: false,
   },
   {
     name: 'Coco',
