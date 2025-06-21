@@ -1,5 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  ManyToMany,
+  JoinTable,
+} from 'typeorm';
 import { DonationDetailDogs } from 'src/donations/entities/donation-detail-dog.entity';
+import { Products } from 'src/products/entities/products.entity';
 
 @Entity('dogs')
 export class Dog {
@@ -26,4 +34,10 @@ export class Dog {
 
   @OneToMany(() => DonationDetailDogs, (dd) => dd.dog)
   donationDetailDogs: DonationDetailDogs[];
+
+  @ManyToMany(() => Products, (product) => product.dogs, {
+    cascade: true,
+  })
+  @JoinTable()
+  products: Products[];
 }

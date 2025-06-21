@@ -1,6 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  ManyToMany,
+} from 'typeorm';
 import { DonationDetail } from 'src/donations/entities/donation-detail.entity';
 import { DonationDetailDogs } from 'src/donations/entities/donation-detail-dog.entity';
+import { Dog } from 'src/dogs/entities/dog.entity';
 
 @Entity('products')
 export class Products {
@@ -24,4 +31,7 @@ export class Products {
 
   @OneToMany(() => DonationDetailDogs, (ddd) => ddd.product)
   donationDetailsDogs: DonationDetailDogs[];
+
+  @ManyToMany(() => Dog, (dogs) => dogs.products)
+  dogs: Dog[];
 }
