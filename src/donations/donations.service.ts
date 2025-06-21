@@ -1,4 +1,8 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Donation } from './entities/donation.entity';
@@ -18,6 +22,17 @@ export class DonationService {
     @InjectRepository(DonationDetailDogs)
     private donationDetailDogsRepo: Repository<DonationDetailDogs>,
   ) {}
+
+  //Actualiza el estado de una donación.
+  async updateStatus(
+    donationId: string,
+    status: 'PENDING' | 'COMPLETED' | 'CANCELED',
+  ): Promise<void> {
+    const result = await this.donationRepo.update({ donationId }, { status });
+    if (result.affected === 0) {
+      throw new NotFoundException(`Donación ${donationId} no encontrada`);
+    }
+  }
 
   async createDonation(userId: string, dto: CreateDonationDto) {
     //Calcular el valor total
@@ -55,6 +70,7 @@ export class DonationService {
     return {
       message: 'Donación creada exitosamente',
       donationId: donation.donationId,
+      totalValue: donation.totalValue,
     };
   }
 

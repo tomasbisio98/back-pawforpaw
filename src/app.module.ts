@@ -10,9 +10,9 @@ import { DogsModule } from './dogs/dogs.module';
 import { SeedModule } from './seeder/seeder.module';
 import { JwtModule } from '@nestjs/jwt';
 import { RecoverModule } from './auth/recoverPassword/recover.module';
-import { DonationModule } from './donations/donations.module';
+import { DonationsModule } from './donations/donations.module';
 import { NewsletterModule } from './newsletter/newsletter.module';
-import { mailerConfigFactory } from './config/mailer';
+import { StripeModule } from './stripe/stripe.module';
 
 @Module({
   imports: [
@@ -43,8 +43,9 @@ import { mailerConfigFactory } from './config/mailer';
     UsersModule,
     AuthModule,
     RecoverModule,
-    DonationModule,
+    DonationsModule,
     NewsletterModule,
+    StripeModule,
   ],
 })
 export class AppModule {}

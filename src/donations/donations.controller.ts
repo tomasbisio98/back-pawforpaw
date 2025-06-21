@@ -10,10 +10,14 @@ import {
 import { DonationService } from './donations.service';
 import { CreateDonationDto } from './dto/createDonations.dto';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { StripeService } from 'src/stripe/stripe.service';
 
 @Controller('donations')
 export class DonationController {
-  constructor(private readonly donationService: DonationService) {}
+  constructor(
+    private readonly donationService: DonationService,
+    private readonly stripeService: StripeService,
+  ) {}
 
   // Crear donación (autenticado)
   @UseGuards(AuthGuard)
@@ -35,5 +39,18 @@ export class DonationController {
     const limitNum = Number(limit) || 9;
     const userId = req.user.userId;
     return this.donationService.getDonationByUser(userId, pageNum, limitNum);
+  }
+
+  //integracion Stripe
+  @UseGuards(AuthGuard)
+  @Post('checkout')
+  async checkout(@Request() req, @Body() dto: CreateDonationDto) {
+    const userId = req.user.userId;
+    const donation = await this.donationService.createDonation(userId, dto);
+
+    return this.stripeService.createCheckoutSession(
+      donation.donationId,
+      donation.totalValue,
+    );
   }
 }
