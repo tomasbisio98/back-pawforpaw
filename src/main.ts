@@ -16,7 +16,7 @@ async function bootstrap() {
   // 3️⃣ RAW body ONLY para Stripe webhook
   //    Stripe envía Content-Type: application/json
   app.use(
-    '/webhook',
+    '/stripe/webhook',
     bodyParser.raw({
       type: 'application/json',
       limit: '1mb', // ajusta según tu necesidad

@@ -53,4 +53,20 @@ export class DonationController {
       donation.totalValue,
     );
   }
+
+  // --- RUTAS PÚBLICAS PARA EL REDIRECT DE STRIPE ---
+  // GET /donations/success
+  @Get('success')
+  handleSuccess(@Query('donationId') donationId: string) {
+    // Puedes devolver JSON:
+    return { status: 'success', donationId };
+    // —o— redirigir al front cuando ya exista:
+    // return res.redirect(`https://tufront.com/success?donationId=${donationId}`);
+  }
+
+  // GET /donations/cancel
+  @Get('cancel')
+  handleCancel() {
+    return { status: 'cancelled' };
+  }
 }

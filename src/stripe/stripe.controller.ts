@@ -4,7 +4,7 @@ import { DonationService } from '../donations/donations.service';
 import { Response, Request } from 'express';
 import Stripe from 'stripe';
 
-@Controller('/webhook')
+@Controller('stripe/webhook')
 export class StripeWebhookController {
   constructor(
     private readonly stripeService: StripeService,

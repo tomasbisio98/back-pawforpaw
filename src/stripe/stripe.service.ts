@@ -11,6 +11,11 @@ export class StripeService {
   }
 
   async createCheckoutSession(donationId: string, amount: number) {
+    const baseUrl =
+      process.env.NODE_ENV === 'production'
+        ? process.env.BACKEND_URL
+        : process.env.FRONTEND_URL ||
+          `http://localhost:${process.env.PORT || 3000}`;
     const session = await this.stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
@@ -31,8 +36,8 @@ export class StripeService {
       // Aquí guardas tu ID para tu lógica, sin mostrarlo en la UI:
       client_reference_id: donationId,
 
-      success_url: `${process.env.FRONTEND_URL}/success?donationId=${donationId}`,
-      cancel_url: `${process.env.FRONTEND_URL}/cancel`,
+      success_url: `${baseUrl}/donations/success?donationId=${donationId}`,
+      cancel_url: `${baseUrl}/donations/cancel`,
       metadata: {
         donationId,
       },
