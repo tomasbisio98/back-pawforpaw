@@ -1,8 +1,18 @@
-import { Controller, Get, Post, Body, Param, Put } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Put,
+  Patch,
+  ParseUUIDPipe,
+} from '@nestjs/common';
 import { DogsService } from './dogs.service';
 import { CreateDogDto } from './dto/create-dog.dto';
 import { UpdateDogDto } from './dto/update-dog.dto';
 import { Dog } from './entities/dog.entity';
+import { AssignProductsDto } from './dto/assing-products.dto';
 
 @Controller('dogs')
 export class DogsController {
@@ -26,5 +36,12 @@ export class DogsController {
   @Put(':id')
   update(@Param('id') id: string, @Body() updateDogDto: UpdateDogDto) {
     return this.dogsService.update(id, updateDogDto);
+  }
+  @Patch(':id/products')
+  assignProductsToDo(
+    @Param('id', ParseUUIDPipe) dogId: string,
+    @Body() assignProductsDto: AssignProductsDto,
+  ): Promise<Dog> {
+    return this.dogsService.assingProducts(dogId, assignProductsDto.productIds);
   }
 }
