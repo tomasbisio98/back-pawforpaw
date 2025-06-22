@@ -51,14 +51,3 @@ export class NewsletterCron {
     }
   }
 }
-
-// 🚀 TEST CONTROLLER
-@Controller('newsletter-test')
-export class NewsletterCronTestController {
-  constructor(private readonly cron: NewsletterCron) {}
-
-  @Post('run-weekly-report')
-  runNow() {
-    return this.cron.sendWeeklyDogReport();
-  }
-}
