@@ -13,6 +13,7 @@ import { RecoverModule } from './auth/recoverPassword/recover.module';
 import { DonationModule } from './donations/donations.module';
 import { NewsletterModule } from './newsletter/newsletter.module';
 import { mailerConfigFactory } from './config/mailer';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { mailerConfigFactory } from './config/mailer';
     RecoverModule,
     DonationModule,
     NewsletterModule,
+    ScheduleModule.forRoot(),
   ],
 })
 export class AppModule {}

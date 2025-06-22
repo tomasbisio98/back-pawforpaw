@@ -6,6 +6,11 @@ import { NewsletterController } from './newsletter.controller';
 import { mailerConfigFactory } from '../config/mailer';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { NewsletterSubscription } from './entities/subscription.entity';
+import {
+  NewsletterCron,
+  NewsletterCronTestController,
+} from './cron/newsletter.cron';
+import { Dog } from 'src/dogs/entities/dog.entity';
 
 @Module({
   imports: [
@@ -15,10 +20,10 @@ import { NewsletterSubscription } from './entities/subscription.entity';
       useFactory: mailerConfigFactory,
       inject: [ConfigService],
     }),
-    TypeOrmModule.forFeature([NewsletterSubscription]),
+    TypeOrmModule.forFeature([NewsletterSubscription, Dog]),
   ],
-  controllers: [NewsletterController],
-  providers: [NewsletterService],
+  controllers: [NewsletterController, NewsletterCronTestController],
+  providers: [NewsletterService, NewsletterCron],
   exports: [NewsletterService],
 })
 export class NewsletterModule {}
