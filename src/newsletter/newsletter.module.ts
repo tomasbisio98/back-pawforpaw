@@ -19,5 +19,6 @@ import { NewsletterSubscription } from './entities/subscription.entity';
   ],
   controllers: [NewsletterController],
   providers: [NewsletterService],
+  exports: [NewsletterService],
 })
 export class NewsletterModule {}

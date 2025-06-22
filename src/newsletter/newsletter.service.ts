@@ -32,4 +32,20 @@ export class NewsletterService {
       `,
     });
   }
+
+  async getAllSubscribers(): Promise<NewsletterSubscription[]> {
+    return this.subscriptionRepo.find();
+  }
+
+  async sendCustomEmail(
+    email: string,
+    subject: string,
+    html: string,
+  ): Promise<void> {
+    await this.mailerService.sendMail({
+      to: email,
+      subject,
+      html,
+    });
+  }
 }
