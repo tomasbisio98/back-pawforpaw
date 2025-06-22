@@ -41,9 +41,12 @@ export class AuthService {
 
     return {
       accessToken: token,
-      name: user.name,
-      email: user.email,
-    };
+      "user": {
+        id: user.id,
+        name: user.name,
+        email: user.email
+      }
+    }
   }
 
   async signUp(user: CreateUserDto) {
@@ -107,8 +110,11 @@ export class AuthService {
 
     return {
       accessToken: token,
-      name: user.name,
-      email: user.email,
-    };
+      "user": {
+        id: user.id,
+        name: user.name,
+        email: user.email
+      }
+    }
   }
 }
