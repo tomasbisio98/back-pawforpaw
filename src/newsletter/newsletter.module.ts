@@ -4,6 +4,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { NewsletterService } from './newsletter.service';
 import { NewsletterController } from './newsletter.controller';
 import { mailerConfigFactory } from '../config/mailer';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { NewsletterSubscription } from './entities/subscription.entity';
 
 @Module({
   imports: [
@@ -13,6 +15,7 @@ import { mailerConfigFactory } from '../config/mailer';
       useFactory: mailerConfigFactory,
       inject: [ConfigService],
     }),
+    TypeOrmModule.forFeature([NewsletterSubscription]),
   ],
   controllers: [NewsletterController],
   providers: [NewsletterService],

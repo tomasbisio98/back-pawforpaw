@@ -40,9 +40,13 @@ export class AuthService {
     const token = this.jwtService.sign(userPayload);
 
     return {
-      token,
-      message: '¡Usuario logueado exitosamente!',
-    };
+      accessToken: token,
+      "user": {
+        id: user.id,
+        name: user.name,
+        email: user.email
+      }
+    }
   }
 
   async signUp(user: CreateUserDto) {
@@ -105,8 +109,12 @@ export class AuthService {
     const token = this.jwtService.sign(userPayload);
 
     return {
-      token,
-      message: '¡Autenticación con Google exitosa!',
-    };
+      accessToken: token,
+      "user": {
+        id: user.id,
+        name: user.name,
+        email: user.email
+      }
+    }
   }
 }
