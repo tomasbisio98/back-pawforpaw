@@ -71,4 +71,12 @@ export class UserRepository {
     await this.usersRepository.remove(user);
     return user.id;
   }
+
+  async findOne(id: string): Promise<User> {
+    const user = await this.usersRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new NotFoundException(`Usuario ${id} no encontrado`);
+    }
+    return user;
+  }
 }
