@@ -13,6 +13,8 @@ import { RecoverModule } from './auth/recoverPassword/recover.module';
 import { DonationsModule } from './donations/donations.module';
 import { NewsletterModule } from './newsletter/newsletter.module';
 import { StripeModule } from './stripe/stripe.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { mailerConfigFactory } from './config/mailer';
 
 @Module({
   imports: [
@@ -21,7 +23,7 @@ import { StripeModule } from './stripe/stripe.module';
     DogsModule,
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env.development',
+      envFilePath: ['.env.development', '.env.production'],
       load: [typeorm],
     }),
     TypeOrmModule.forRootAsync({
@@ -38,6 +40,11 @@ import { StripeModule } from './stripe/stripe.module';
           signOptions: { expiresIn: '60m' },
         };
       },
+    }),
+    MailerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: mailerConfigFactory,
     }),
     FileModule,
     UsersModule,

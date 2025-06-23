@@ -6,11 +6,16 @@ import {
   Get,
   UseGuards,
   Query,
+  Param,
+  ForbiddenException,
 } from '@nestjs/common';
 import { DonationService } from './donations.service';
 import { CreateDonationDto } from './dto/createDonations.dto';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { StripeService } from 'src/stripe/stripe.service';
+import { Roles } from 'src/decorators/role/decorators.role';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Role } from 'src/enum/roles.enum';
 
 @Controller('donations')
 export class DonationController {
@@ -19,17 +24,23 @@ export class DonationController {
     private readonly stripeService: StripeService,
   ) {}
 
-  // Crear donación (autenticado)
-  @UseGuards(AuthGuard)
-  @Post()
-  createDonation(@Request() req, @Body() dto: CreateDonationDto) {
-    const userId = req.user.userId;
-    return this.donationService.createDonation(userId, dto);
+  // --- RUTAS PÚBLICAS PRIMERO (sin token) ---
+  @Get('success')
+  handleSuccess(@Query('donationId') donationId: string) {
+    return { status: 'success', donationId };
+    // O redirige así:
+    // return res.redirect(`https://tu-frontend.com/gracias?donationId=${donationId}`);
   }
 
-  // Obtener la donación del usuario actual
-  @UseGuards(AuthGuard)
+  @Get('cancel')
+  handleCancel() {
+    return { status: 'cancelled' };
+  }
+
+  // --- RUTAS PROTEGIDAS DESPUÉS ---
   @Get('mine')
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   getMyDonation(
     @Request() req,
     @Query('page') page?: string,
@@ -41,32 +52,27 @@ export class DonationController {
     return this.donationService.getDonationByUser(userId, pageNum, limitNum);
   }
 
-  //integracion Stripe
   @UseGuards(AuthGuard)
   @Post('checkout')
   async checkout(@Request() req, @Body() dto: CreateDonationDto) {
     const userId = req.user.userId;
     const donation = await this.donationService.createDonation(userId, dto);
-
     return this.stripeService.createCheckoutSession(
       donation.donationId,
       donation.totalValue,
     );
   }
 
-  // --- RUTAS PÚBLICAS PARA EL REDIRECT DE STRIPE ---
-  // GET /donations/success
-  @Get('success')
-  handleSuccess(@Query('donationId') donationId: string) {
-    // Puedes devolver JSON:
-    return { status: 'success', donationId };
-    // —o— redirigir al front cuando ya exista:
-    // return res.redirect(`https://tufront.com/success?donationId=${donationId}`);
-  }
+  @Get(':id')
+  @UseGuards(AuthGuard)
+  async getOne(@Param('id') donationId: string, @Request() req) {
+    const donation = await this.donationService.getDonationById(donationId);
 
-  // GET /donations/cancel
-  @Get('cancel')
-  handleCancel() {
-    return { status: 'cancelled' };
+    const firstDonation = donation[0];
+    if (!firstDonation || firstDonation.userId !== req.user.userId) {
+      throw new ForbiddenException('No tienes acceso a esta donación');
+    }
+
+    return donation; // ✅ esto resuelve el error
   }
 }

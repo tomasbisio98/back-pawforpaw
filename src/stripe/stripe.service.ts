@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { Dog } from 'src/dogs/entities/dog.entity';
 import Stripe from 'stripe';
 
 @Injectable()
@@ -11,17 +10,21 @@ export class StripeService {
   }
 
   async createCheckoutSession(donationId: string, amount: number) {
+    //Calcula la URL base para redirecciones
     const baseUrl =
       process.env.NODE_ENV === 'production'
         ? process.env.BACKEND_URL
         : process.env.FRONTEND_URL ||
           `http://localhost:${process.env.PORT || 3000}`;
+
+    //Llama al método de Stripe para crear una sesión de Checkout. Es asíncrono, devuelve un objeto session
     const session = await this.stripe.checkout.sessions.create({
+      //Solo permite pagos con tarjeta de crédito/débito.
       payment_method_types: ['card'],
       line_items: [
         {
           price_data: {
-            currency: 'usd',
+            currency: 'usd', //divisa
             unit_amount: Math.round(amount * 100),
             product_data: {
               name: `Donación Fundación PawForPaw`,
@@ -31,9 +34,10 @@ export class StripeService {
           quantity: 1,
         },
       ],
+      //Modo de la sesión: pago único inmediato.
       mode: 'payment',
 
-      // Aquí guardas tu ID para tu lógica, sin mostrarlo en la UI:
+      // Guarda tu donationId como referencia interna, sin mostrarlo al cliente.
       client_reference_id: donationId,
 
       success_url: `${baseUrl}/donations/success?donationId=${donationId}`,
@@ -44,7 +48,7 @@ export class StripeService {
     });
     return { url: session.url };
   }
-
+  // para verificar la firma de los eventos webhook de Stripe.
   validateWebhook(sig: string, body: Buffer): Stripe.Event {
     return this.stripe.webhooks.constructEvent(
       body,
