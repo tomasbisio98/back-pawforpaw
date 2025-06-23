@@ -40,13 +40,13 @@ export class AuthService {
     const token = this.jwtService.sign(userPayload);
 
     return {
-      accessToken: token,
-      "user": {
+      Token: token,
+      user: {
         id: user.id,
         name: user.name,
-        email: user.email
-      }
-    }
+        email: user.email,
+      },
+    };
   }
 
   async signUp(user: CreateUserDto) {
@@ -109,12 +109,12 @@ export class AuthService {
     const token = this.jwtService.sign(userPayload);
 
     return {
-      accessToken: token,
-      "user": {
+      Token: token, //ajuste menor para forzar el commit
+      user: {
         id: user.id,
         name: user.name,
-        email: user.email
-      }
-    }
+        email: user.email,
+      },
+    };
   }
 }
