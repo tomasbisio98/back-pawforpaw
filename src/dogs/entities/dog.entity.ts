@@ -1,5 +1,14 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  ManyToMany,
+  JoinTable,
+  CreateDateColumn,
+} from 'typeorm';
 import { DonationDetailDogs } from 'src/donations/entities/donation-detail-dog.entity';
+import { Products } from 'src/products/entities/products.entity';
 
 @Entity('dogs')
 export class Dog {
@@ -24,6 +33,15 @@ export class Dog {
   @Column({ default: true })
   status: boolean;
 
+  @CreateDateColumn()
+  createdAt: Date;
+
   @OneToMany(() => DonationDetailDogs, (dd) => dd.dog)
   donationDetailDogs: DonationDetailDogs[];
+
+  @ManyToMany(() => Products, (product) => product.dogs, {
+    cascade: true,
+  })
+  @JoinTable()
+  products: Products[];
 }

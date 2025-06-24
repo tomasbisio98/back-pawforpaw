@@ -10,9 +10,12 @@ import { DogsModule } from './dogs/dogs.module';
 import { SeedModule } from './seeder/seeder.module';
 import { JwtModule } from '@nestjs/jwt';
 import { RecoverModule } from './auth/recoverPassword/recover.module';
-import { DonationModule } from './donations/donations.module';
+import { DonationsModule } from './donations/donations.module';
 import { NewsletterModule } from './newsletter/newsletter.module';
+import { StripeModule } from './stripe/stripe.module';
+import { MailerModule } from '@nestjs-modules/mailer';
 import { mailerConfigFactory } from './config/mailer';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -21,7 +24,7 @@ import { mailerConfigFactory } from './config/mailer';
     DogsModule,
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env.development',
+      envFilePath: ['.env.development', '.env.production'],
       load: [typeorm],
     }),
     TypeOrmModule.forRootAsync({
@@ -39,12 +42,19 @@ import { mailerConfigFactory } from './config/mailer';
         };
       },
     }),
+    MailerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: mailerConfigFactory,
+    }),
     FileModule,
     UsersModule,
     AuthModule,
     RecoverModule,
-    DonationModule,
+    DonationsModule,
     NewsletterModule,
+    ScheduleModule.forRoot(),
+    StripeModule,
   ],
 })
 export class AppModule {}

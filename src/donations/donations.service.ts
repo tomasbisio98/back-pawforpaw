@@ -1,4 +1,8 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Donation } from './entities/donation.entity';
@@ -19,8 +23,19 @@ export class DonationService {
     private donationDetailDogsRepo: Repository<DonationDetailDogs>,
   ) {}
 
+  // Actualiza el estado de una donación.
+  async updateStatus(
+    donationId: string,
+    status: 'PENDING' | 'COMPLETED' | 'CANCELED',
+  ): Promise<void> {
+    const result = await this.donationRepo.update({ donationId }, { status });
+    if (result.affected === 0) {
+      throw new NotFoundException(`Donación ${donationId} no encontrada`);
+    }
+  }
+
   async createDonation(userId: string, dto: CreateDonationDto) {
-    //Calcular el valor total
+    // Calcular el valor total
     const totalValue = dto.products.reduce((sum, p) => sum + p.price_unit, 0);
 
     // Crear la donación
@@ -33,7 +48,7 @@ export class DonationService {
     await this.donationRepo.save(donation);
 
     for (const product of dto.products) {
-      //Crear el detalle del producto donado
+      // Crear el detalle del producto donado
       const detail = this.donationDetailRepo.create({
         donationId: donation.donationId,
         product_id: product.productId,
@@ -41,7 +56,7 @@ export class DonationService {
       });
       await this.donationDetailRepo.save(detail);
 
-      //Asociar el producto al perrito beneficiado
+      // Asociar el producto al perrito beneficiado
       for (const dogId of product.dogs) {
         const detailDog = this.donationDetailDogsRepo.create({
           donationDetailId: detail.donationDetailId,
@@ -55,6 +70,7 @@ export class DonationService {
     return {
       message: 'Donación creada exitosamente',
       donationId: donation.donationId,
+      totalValue: donation.totalValue,
     };
   }
 
@@ -69,30 +85,56 @@ export class DonationService {
         'donationDetails.dogAssignments',
         'donationDetails.dogAssignments.dog',
       ],
-      order: {
-        date: 'DESC',
-      },
+      order: { date: 'DESC' },
     });
 
-    // Verifica que el usuario sí tenga donaciones.
     if (!donations || donations.length === 0) {
       throw new BadRequestException('No tienes donaciones registradas');
     }
 
-    // Reestructura la respuesta
-    const simpleResponse = donations.flatMap((donations) =>
-      //flatMap sirve para "aplanar" listas anidadas
-      donations.donationDetails.flatMap((detail) =>
-        detail.dogAssignments.map((assigment) => ({
-          //Objeto simplificado por cada combinación producto + perro
-          donationId: donations.donationId,
-          fecha: donations.date,
+    const simpleResponse = donations.flatMap((donation) =>
+      donation.donationDetails.flatMap((detail) =>
+        detail.dogAssignments.map((assignment) => ({
+          donationId: donation.donationId,
+          fecha: donation.date,
           producto: detail.product.name,
-          perrito: assigment.dog.name,
-          monto: parseFloat(donations.totalValue as any),
-          estado: donations.status,
+          perrito: assignment.dog.name,
+          monto: parseFloat(donation.totalValue as any),
+          estado: donation.status,
         })),
       ),
+    );
+
+    return simpleResponse;
+  }
+
+  // Obtiene una donación por su ID, con todas sus relaciones necesarias
+  async getDonationById(donationId: string): Promise<any[]> {
+    const donation = await this.donationRepo.findOne({
+      where: { donationId },
+      relations: [
+        'user',
+        'donationDetails',
+        'donationDetails.product',
+        'donationDetails.dogAssignments',
+        'donationDetails.dogAssignments.dog',
+      ],
+    });
+
+    if (!donation) {
+      throw new NotFoundException(`Donación ${donationId} no encontrada`);
+    }
+
+    const simpleResponse = donation.donationDetails.flatMap((detail) =>
+      detail.dogAssignments.map((assignment) => ({
+        donationId: donation.donationId,
+        fecha: donation.date,
+        producto: detail.product.name,
+        perrito: assignment.dog.name,
+        monto: parseFloat(donation.totalValue as any),
+        estado: donation.status,
+        userId: donation.user?.id,
+      })),
     );
 
     return simpleResponse;

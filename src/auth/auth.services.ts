@@ -40,8 +40,13 @@ export class AuthService {
     const token = this.jwtService.sign(userPayload);
 
     return {
-      token,
-      message: '¡Usuario logueado exitosamente!',
+      token: token,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin
+      },
     };
   }
 
@@ -105,8 +110,13 @@ export class AuthService {
     const token = this.jwtService.sign(userPayload);
 
     return {
-      token,
-      message: '¡Autenticación con Google exitosa!',
+      token: token, //ajuste menor para forzar el commit
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin
+      },
     };
   }
 }

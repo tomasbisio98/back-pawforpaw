@@ -1,18 +1,31 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, Between } from 'typeorm';
+import { NewsletterSubscription } from './entities/subscription.entity';
+import { Dog } from 'src/dogs/entities/dog.entity';
 
 @Injectable()
 export class NewsletterService {
-  private readonly subscribedEmails = new Set<string>();
+  constructor(
+    private readonly mailerService: MailerService,
 
-  constructor(private readonly mailerService: MailerService) {}
+    @InjectRepository(NewsletterSubscription)
+    private readonly subscriptionRepo: Repository<NewsletterSubscription>,
+
+    @InjectRepository(Dog)
+    private readonly dogRepo: Repository<Dog>,
+  ) {}
 
   async sendSubscriptionConfirmation(email: string): Promise<void> {
-    if (this.subscribedEmails.has(email)) {
+    const existing = await this.subscriptionRepo.findOne({ where: { email } });
+
+    if (existing) {
       throw new BadRequestException('Ya estás suscrito al newsletter.');
     }
 
-    this.subscribedEmails.add(email);
+    const subscription = this.subscriptionRepo.create({ email });
+    await this.subscriptionRepo.save(subscription);
 
     await this.mailerService.sendMail({
       to: email,
@@ -22,6 +35,34 @@ export class NewsletterService {
         <p>Recibirás novedades, actividades y noticias de la fundación.</p>
         <p>Si tenés preguntas, escribinos cuando quieras.</p>
       `,
+    });
+  }
+
+  async getAllSubscribers(): Promise<NewsletterSubscription[]> {
+    return this.subscriptionRepo.find();
+  }
+
+  async sendCustomEmail(
+    email: string,
+    subject: string,
+    html: string,
+  ): Promise<void> {
+    await this.mailerService.sendMail({
+      to: email,
+      subject,
+      html,
+    });
+  }
+
+  async getDogsCreatedLastWeek(): Promise<Dog[]> {
+    const now = new Date();
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(now.getDate() - 7);
+
+    return this.dogRepo.find({
+      where: {
+        createdAt: Between(oneWeekAgo, now),
+      },
     });
   }
 }
