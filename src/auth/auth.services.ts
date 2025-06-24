@@ -40,11 +40,12 @@ export class AuthService {
     const token = this.jwtService.sign(userPayload);
 
     return {
-      Token: token,
+      token: token,
       user: {
         id: user.id,
         name: user.name,
         email: user.email,
+        isAdmin: user.isAdmin
       },
     };
   }
@@ -109,11 +110,12 @@ export class AuthService {
     const token = this.jwtService.sign(userPayload);
 
     return {
-      Token: token, //ajuste menor para forzar el commit
+      token: token, //ajuste menor para forzar el commit
       user: {
         id: user.id,
         name: user.name,
         email: user.email,
+        isAdmin: user.isAdmin
       },
     };
   }
