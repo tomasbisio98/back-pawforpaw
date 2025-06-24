@@ -26,7 +26,7 @@ export class DonationMailService {
     // 2. Envía el correo
     try {
       const info = await this.mailer.sendMail({
-        from: `"Fundación PawForPaw Donaciones" <no-reply@pawforpaw.org>`,
+        from: `"Fundación PawForPaw Donaciones" <${process.env.MAIL_FROM}>`,
         to: donation.user.email,
         subject: '✅ ¡Tu donación fue exitosa!',
         html: `
