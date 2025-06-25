@@ -4,15 +4,6 @@ import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
 export const dogs: CreateDogDto[] = [
   {
-    name: 'Max',
-    sex: 'M',
-    city: 'Bogotá',
-    description: 'Muy amigable y juguetón.',
-    imgUrl:
-      'https://img.canal1.com.co/wp-content/uploads/2022/05/06221850/Los-perros-criollos-gozan-de-mejor-salud.jpg?format=auto&width=1200',
-    status: true,
-  },
-  {
     name: 'Luna',
     sex: 'H',
     city: 'Medellín',
