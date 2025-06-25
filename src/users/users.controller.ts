@@ -30,22 +30,22 @@ export class UserController {
 
   @HttpCode(200)
   @Get('/list')
-  @Roles(Role.Admin)
-  @UseGuards(AuthGuard, RolesGuard)
+  // @Roles(Role.Admin)
+  //@UseGuards(AuthGuard, RolesGuard)
   getUsers(@Query('page') page: number, @Query('limit') limit: number) {
     return this.usersService.getUsers(page, limit);
   }
 
   @HttpCode(200)
   @Get(':id')
-  @UseGuards(AuthGuard)
+  //@UseGuards(AuthGuard)
   getUserById(@Param('id', ParseUUIDPipe) id: string) {
     return this.usersService.getById(id);
   }
 
   @HttpCode(200)
   @Put(':id')
-  @UseGuards(AuthGuard)
+  //@UseGuards(AuthGuard)
   update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateUser: CreateUserDto,
@@ -58,7 +58,7 @@ export class UserController {
 
   @HttpCode(200)
   @Delete(':id')
-  @UseGuards(AuthGuard)
+ // @UseGuards(AuthGuard)
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.usersService.remove(id);
   }
