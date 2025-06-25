@@ -3,6 +3,7 @@ import { User } from './users.entity';
 import { Repository } from 'typeorm';
 import { NotFoundException, BadRequestException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 export class UserRepository {
   constructor(
@@ -49,7 +50,7 @@ export class UserRepository {
 
   async update(
     id: string,
-    user: Partial<CreateUserDto>,
+    user: Partial<UpdateUserDto>,
   ): Promise<Partial<User>> {
     await this.usersRepository.update(id, user);
 

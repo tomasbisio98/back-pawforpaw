@@ -15,10 +15,12 @@ import { validateUser } from '../utils/validate';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { UsersDbService } from './usersDb.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../decorators/role/decorators.role';
 import { Role } from '../enum/roles.enum';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { validateUserUpdate } from 'src/utils/validateUserUpdate';
 
 @ApiBearerAuth()
 @Controller('users')
@@ -48,9 +50,9 @@ export class UserController {
   //@UseGuards(AuthGuard)
   update(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() updateUser: CreateUserDto,
+    @Body() updateUser: UpdateUserDto,
   ) {
-    if (validateUser(updateUser)) {
+    if (validateUserUpdate(updateUser)) {
       return this.usersService.update(id, updateUser);
     }
     return 'Usuario no válido';
