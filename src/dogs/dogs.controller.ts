@@ -7,6 +7,7 @@ import {
   Put,
   Patch,
   ParseUUIDPipe,
+  Query,
 } from '@nestjs/common';
 import { DogsService } from './dogs.service';
 import { CreateDogDto } from './dto/create-dog.dto';
@@ -19,8 +20,20 @@ export class DogsController {
   constructor(private readonly dogsService: DogsService) {}
 
   @Get()
-  async findAll(): Promise<Dog[]> {
-    return this.dogsService.findAll();
+  async findAll(
+    @Query('name') name?: string,
+    @Query('gender') gender?: string,
+    @Query('city') city?: string,
+    @Query('page') page = 1,
+    @Query('limit') limit = 9,
+  ): Promise<{ data: Dog[]; total: number }> {
+    return await this.dogsService.findAllWithFilters({
+      name,
+      gender,
+      city,
+      page: +page,
+      limit: +limit,
+    });
   }
 
   @Get(':id')
