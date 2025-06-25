@@ -10,7 +10,7 @@ export class UserRepository {
     @InjectRepository(User) private usersRepository: Repository<User>,
   ) {}
 
-  async get(page: number = 1, limit: number = 5): Promise<Partial<User>[]> {
+  async get(page: number = 1, limit: number = 25): Promise<Partial<User>[]> {
     let users = await this.usersRepository.find();
 
     const startIndex = (page - 1) * limit;
