@@ -1,4 +1,4 @@
-import { Controller, Injectable, Post } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Dog } from 'src/dogs/entities/dog.entity';

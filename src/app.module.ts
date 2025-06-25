@@ -14,8 +14,8 @@ import { DonationsModule } from './donations/donations.module';
 import { NewsletterModule } from './newsletter/newsletter.module';
 import { StripeModule } from './stripe/stripe.module';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { mailerConfigFactory } from './config/mailer';
 import { ScheduleModule } from '@nestjs/schedule';
+import { mailerConfigFactory } from './config/mailer';
 
 @Module({
   imports: [

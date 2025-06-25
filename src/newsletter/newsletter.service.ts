@@ -28,6 +28,7 @@ export class NewsletterService {
     await this.subscriptionRepo.save(subscription);
 
     await this.mailerService.sendMail({
+      from: `"Fundación PawForPaw" <${process.env.MAIL_FROM}>`,
       to: email,
       subject: 'Gracias por suscribirte a nuestro newsletter ❤️',
       html: `

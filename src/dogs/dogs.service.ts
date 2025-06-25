@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateDogDto } from './dto/create-dog.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Dog } from './entities/dog.entity';
-import { Repository } from 'typeorm';
+import { Repository, ILike } from 'typeorm';
 import { Products } from 'src/products/entities/products.entity';
 import { NewsletterService } from 'src/newsletter/newsletter.service';
 import { UpdateDogDto } from './dto/update-dog.dto';
@@ -54,6 +54,7 @@ export class DogsService {
 
     return savedDog;
   }
+
   async update(id: string, updateDogDto: UpdateDogDto): Promise<Dog> {
     const dog = await this.dogRepository.preload({
       dogId: id,
@@ -77,5 +78,42 @@ export class DogsService {
     dog.products = products;
 
     return await this.dogRepository.save(dog);
+  }
+
+  async findAllWithFilters({
+    name,
+    gender,
+    city,
+    page = 1,
+    limit = 9,
+  }: {
+    name?: string;
+    gender?: string;
+    city?: string;
+    page: number;
+    limit: number;
+  }): Promise<{ data: Dog[]; total: number }> {
+    const where: any = {};
+
+    if (name) {
+      where.name = ILike(`%${name}%`);
+    }
+
+    if (gender) {
+      where.sex = gender;
+    }
+
+    if (city) {
+      where.city = ILike(`%${city}%`);
+    }
+
+    const [data, total] = await this.dogRepository.findAndCount({
+      where,
+      take: limit,
+      skip: (page - 1) * limit,
+      order: { createdAt: 'DESC' },
+    });
+
+    return { data, total };
   }
 }
