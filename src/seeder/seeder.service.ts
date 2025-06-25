@@ -5,6 +5,8 @@ import { Products } from 'src/products/entities/products.entity';
 import { Repository } from 'typeorm';
 import { dogs, products, users } from './seeder';
 import { User } from 'src/users/users.entity';
+import { UserAdminSeeder } from './user-admin.seeder';
+
 @Injectable()
 export class SeedService implements OnApplicationBootstrap {
   constructor(
@@ -14,6 +16,7 @@ export class SeedService implements OnApplicationBootstrap {
     private readonly productRepository: Repository<Products>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly userAdminSeeder: UserAdminSeeder,
   ) {}
 
   async onApplicationBootstrap() {
@@ -35,5 +38,7 @@ export class SeedService implements OnApplicationBootstrap {
       await this.userRepository.save(users);
       console.log('👩🏻‍💻 Seed: 15 usuarios insertados');
     }
+
+    await this.userAdminSeeder.run();
   }
 }

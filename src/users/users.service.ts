@@ -13,6 +13,10 @@ export class UserService {
     return this.usersRepository.getById(id);
   }
 
+  getByEmail(email: string) {
+    return this.usersRepository.getByEmail(email);
+  }
+
   createUser(user: Partial<User>): Promise<Partial<User>> {
     return this.usersRepository.createUser(user);
   }

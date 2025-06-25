@@ -10,7 +10,7 @@ import { UsersDbService } from './usersDb.service';
   imports: [TypeOrmModule.forFeature([User])],
   providers: [UserService, UsersDbService, UserRepository],
   controllers: [UserController],
-  exports: [UserRepository],
+  exports: [UserRepository, UserService],
 })
 export class UsersModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {}

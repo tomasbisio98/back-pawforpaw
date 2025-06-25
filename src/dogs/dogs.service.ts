@@ -24,11 +24,27 @@ export class DogsService {
   }
 
   async findOne(id: string): Promise<Dog> {
-    const dog = await this.dogRepository.findOneBy({ dogId: id });
+    const dog = await this.dogRepository.findOne({
+      where: { dogId: id },
+      relations: ['products'], // 👈 incluye los productos asignados
+    });
+
     if (!dog) {
       throw new NotFoundException(`Dog with id ${id} not found`);
     }
+
     return dog;
+  }
+
+  async getProductsByDog(dogId: string): Promise<Products[]> {
+    const dog = await this.dogRepository.findOne({
+      where: { dogId },
+      relations: ['products'],
+    });
+
+    if (!dog) throw new NotFoundException('Perrito no encontrado');
+
+    return dog.products;
   }
 
   async create(createDogDto: CreateDogDto): Promise<Dog> {
