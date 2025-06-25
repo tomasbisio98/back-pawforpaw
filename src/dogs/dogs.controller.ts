@@ -50,6 +50,7 @@ export class DogsController {
   update(@Param('id') id: string, @Body() updateDogDto: UpdateDogDto) {
     return this.dogsService.update(id, updateDogDto);
   }
+
   @Patch(':id/products')
   assignProductsToDo(
     @Param('id', ParseUUIDPipe) dogId: string,
