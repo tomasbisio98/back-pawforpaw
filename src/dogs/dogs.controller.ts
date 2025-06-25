@@ -14,6 +14,7 @@ import { CreateDogDto } from './dto/create-dog.dto';
 import { UpdateDogDto } from './dto/update-dog.dto';
 import { Dog } from './entities/dog.entity';
 import { AssignProductsDto } from './dto/assing-products.dto';
+import { Products } from 'src/products/entities/products.entity';
 
 @Controller('dogs')
 export class DogsController {
@@ -39,6 +40,13 @@ export class DogsController {
   @Get(':id')
   findOne(@Param('id') id: string): Promise<Dog> {
     return this.dogsService.findOne(id);
+  }
+
+  @Get(':id/products')
+  getProductsByDog(
+    @Param('id', ParseUUIDPipe) dogId: string,
+  ): Promise<Products[]> {
+    return this.dogsService.getProductsByDog(dogId);
   }
 
   @Post()

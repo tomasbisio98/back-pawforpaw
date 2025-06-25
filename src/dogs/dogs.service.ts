@@ -36,6 +36,17 @@ export class DogsService {
     return dog;
   }
 
+  async getProductsByDog(dogId: string): Promise<Products[]> {
+    const dog = await this.dogRepository.findOne({
+      where: { dogId },
+      relations: ['products'],
+    });
+
+    if (!dog) throw new NotFoundException('Perrito no encontrado');
+
+    return dog.products;
+  }
+
   async create(createDogDto: CreateDogDto): Promise<Dog> {
     const newDog = this.dogRepository.create(createDogDto);
     const savedDog = await this.dogRepository.save(newDog);
