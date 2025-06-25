@@ -42,6 +42,9 @@ export class StripeService {
 
       success_url: `${baseUrl}/donations/success?donationId=${donationId}`,
       cancel_url: `${baseUrl}/donations/cancel`,
+      metadata: {
+        donationId,
+      },
       payment_intent_data: {
         metadata: {
           donationId,

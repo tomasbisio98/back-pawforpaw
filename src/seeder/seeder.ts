@@ -4,15 +4,6 @@ import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
 export const dogs: CreateDogDto[] = [
   {
-    name: 'Luna',
-    sex: 'H',
-    city: 'Medellín',
-    description: 'Perfecto para familias con niños.',
-    imgUrl:
-      'https://blog.laikamascotas.cl/wp-content/uploads/2023/08/1686179.jpg',
-    status: true,
-  },
-  {
     name: 'Rocky',
     sex: 'M',
     city: 'Cali',
