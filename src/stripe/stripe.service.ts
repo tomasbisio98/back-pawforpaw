@@ -15,7 +15,7 @@ export class StripeService {
       process.env.NODE_ENV === 'production'
         ? process.env.BACKEND_URL
         : process.env.FRONTEND_URL ||
-          `http://localhost:${process.env.PORT || 3000}`;
+          `http://localhost:${process.env.PORT || 3001}`;
 
     //Llama al método de Stripe para crear una sesión de Checkout. Es asíncrono, devuelve un objeto session
     const session = await this.stripe.checkout.sessions.create({
@@ -44,6 +44,11 @@ export class StripeService {
       cancel_url: `${baseUrl}/donations/cancel`,
       metadata: {
         donationId,
+      },
+      payment_intent_data: {
+        metadata: {
+          donationId,
+        },
       },
     });
     return { url: session.url };

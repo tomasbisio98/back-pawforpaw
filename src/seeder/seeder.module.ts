@@ -8,8 +8,7 @@ import { UserAdminSeeder } from './user-admin.seeder';
 import { UsersModule } from 'src/users/users.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Dog, Products, User]),
-  UsersModule],
+  imports: [TypeOrmModule.forFeature([Dog, Products, User]), UsersModule],
   providers: [SeedService, UserAdminSeeder],
 })
 export class SeedModule {}
