@@ -54,11 +54,16 @@ export class DonationController {
   @UseGuards(AuthGuard)
   async checkout(@Request() req, @Body() dto: CreateDonationDto) {
     const userId = req.user.userId;
+    console.log('🧾 Payload recibido:', JSON.stringify(dto, null, 2));
+
     const donation = await this.donationService.createDonation(userId, dto);
-    return this.stripeService.createCheckoutSession(
+    const session = await this.stripeService.createCheckoutSession(
       donation.donationId,
       donation.totalValue,
     );
+
+    console.log('🔗 Stripe session:', session);
+    return { url: session.url }; // ✅ DEVUELVE SOLO LA URL
   }
 
   @Get('historial')
