@@ -67,7 +67,7 @@ export class UserController {
 
   @HttpCode(200)
   @Delete(':id')
- // @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.usersService.remove(id);
   }
