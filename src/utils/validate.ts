@@ -8,7 +8,6 @@ export function validateUser(user: any): boolean {
     user.email.includes('@') &&
     typeof user.password === 'string' &&
     user.password.length >= 6 &&
-    typeof user.phone === 'string' &&
-    typeof user.dni === 'string'
+    typeof user.phone === 'string'
   );
 }
