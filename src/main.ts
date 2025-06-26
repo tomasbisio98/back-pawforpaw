@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { loggerGlobal } from './middleware/logger.middleware';
 import { ValidationPipe } from '@nestjs/common';
 import * as bodyParser from 'body-parser';
+import * as express from 'express';
 
 async function bootstrap() {
   // 1️⃣ Desactivar el bodyParser integrado de Nest
@@ -13,15 +14,8 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors();
 
-  // 3️⃣ RAW body ONLY para Stripe webhook
-  //    Stripe envía Content-Type: application/json
-  app.use(
-    '/stripe/webhook',
-    bodyParser.raw({
-      type: 'application/json',
-      limit: '1mb', // ajusta según tu necesidad
-    }),
-  );
+  // ✅ Excluye el webhook de ser parseado por bodyParser
+  app.use('/stripe/webhook', express.raw({ type: 'application/json' }));
 
   // 4️⃣ JSON + URL-encoded bodies para todas las demás rutas
   app.use(bodyParser.json());
