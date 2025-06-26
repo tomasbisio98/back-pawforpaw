@@ -16,6 +16,7 @@ import { StripeModule } from './stripe/stripe.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { ScheduleModule } from '@nestjs/schedule';
 import { mailerConfigFactory } from './config/mailer';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { mailerConfigFactory } from './config/mailer';
     NewsletterModule,
     ScheduleModule.forRoot(),
     StripeModule,
+    DashboardModule,
   ],
 })
 export class AppModule {}
