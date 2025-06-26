@@ -34,8 +34,15 @@ export class UserController {
   @Get('/list')
   // @Roles(Role.Admin)
   //@UseGuards(AuthGuard, RolesGuard)
-  getUsers(@Query('page') page: number, @Query('limit') limit: number) {
-    return this.usersService.getUsers(page, limit);
+  getUsers(
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+    @Query('orderBy') orderBy: 'name',
+    @Query('order') order: 'asc' | 'desc' = 'asc',
+    @Query('status') status?: 'activo' | 'inactivo',
+  
+  ) {
+    return this.usersService.getUsers(page, limit, orderBy, order, status);
   }
 
   @HttpCode(200)
