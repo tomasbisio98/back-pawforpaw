@@ -88,10 +88,25 @@ export class DogsService {
       where: { dogId },
       relations: ['products'],
     });
+
     if (!dog) throw new NotFoundException('Perrito no encontrado');
 
-    const products = await this.productsRepository.findByIds(productIds);
-    dog.products = products;
+    const nuevosProductos = await this.productsRepository.findByIds(productIds);
+
+    // Evitar duplicados comparando por ID
+    const productosExistentes = dog.products ?? [];
+
+    const productosFinales = [
+      ...productosExistentes,
+      ...nuevosProductos.filter(
+        (nuevo) =>
+          !productosExistentes.some(
+            (existente) => existente.productId === nuevo.productId,
+          ),
+      ),
+    ];
+
+    dog.products = productosFinales;
 
     return await this.dogRepository.save(dog);
   }
