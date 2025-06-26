@@ -5,10 +5,21 @@ import { User } from './users.entity';
 @Injectable()
 export class UserService {
   constructor(private usersRepository: UserRepository) {}
-  getUsers(page: number, limit: number): Promise<Partial<User>[]> {
-    return this.usersRepository.get(page, limit);
+  getUsers(
+    page: number,
+    limit: number,
+    orderBy: 'name',
+    order: 'asc' | 'desc' = 'asc',
+    status?: 'activo' | 'inactivo',
+  ) {
+    return this.usersRepository.get(
+      page,
+      limit,
+      orderBy,
+      order, // 👈 así, sin toUpperCase
+      status,
+    );
   }
-
   getById(id: string) {
     return this.usersRepository.getById(id);
   }

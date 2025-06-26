@@ -10,15 +10,36 @@ export class UserRepository {
     @InjectRepository(User) private usersRepository: Repository<User>,
   ) {}
 
-  async get(page: number = 1, limit: number = 20): Promise<Partial<User>[]> {
-    let users = await this.usersRepository.find();
+  async get(
+    page: number = 1,
+    limit: number = 20,
+    orderBy: 'name',
+    order: 'asc' | 'desc' = 'asc',
+    status?: 'activo' | 'inactivo'
+  ): Promise<Partial<User>[]> {
+    const validOrderFields = ['name', 'email', 'phone', 'createdAt'];
+    const safeOrderBy = validOrderFields.includes(orderBy) ? orderBy : 'name';
 
+    let users = await this.usersRepository.find({
+      order: {
+        [safeOrderBy]: order === 'asc' ? 'ASC' : 'DESC',
+      },
+    });
+
+    // ✅ FILTRADO POR STATUS
+    if (status === 'activo') {
+      users = users.filter((user) => user.status === true);
+    } else if (status === 'inactivo') {
+      users = users.filter((user) => user.status === false);
+    }
+
+    // ✅ PAGINACIÓN
     const startIndex = (page - 1) * limit;
     const endIndex = startIndex + limit;
+    const paginatedUsers = users.slice(startIndex, endIndex);
 
-    users = users.slice(startIndex, endIndex);
-
-    return users.map(({ password, ...user }) => user);
+    // ✅ RETORNO SIN PASSWORD
+    return paginatedUsers.map(({ password, ...user }) => user);
   }
 
   async getById(id: string): Promise<Partial<User>> {
