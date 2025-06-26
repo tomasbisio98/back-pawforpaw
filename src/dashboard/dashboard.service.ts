@@ -30,15 +30,21 @@ export class DashboardService {
     const totalDogs = await this.dogRepo.count();
     const totalProducts = await this.productRepo.count();
     const totalUsers = await this.userRepo.count();
+
     const totalDonationsResult = await this.donationRepo
       .createQueryBuilder('donation')
       .select('SUM(donation.totalValue)', 'total')
+      .where('donation.status = :status', { status: 'COMPLETED' })
       .getRawOne();
+
     const totalDonations = parseFloat(totalDonationsResult.total) || 0;
 
     const topDonatedDogs = await this.donationDetailDogsRepo
       .createQueryBuilder('ddd')
       .leftJoin('ddd.dog', 'dog')
+      .leftJoin('ddd.donationDetail', 'detail')
+      .leftJoin('detail.donation', 'donation')
+      .where('donation.status = :status', { status: 'COMPLETED' })
       .select('dog.name', 'name')
       .addSelect('COUNT(*)', 'donations')
       .groupBy('dog.name')
