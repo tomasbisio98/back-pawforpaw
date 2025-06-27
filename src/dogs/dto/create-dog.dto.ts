@@ -1,4 +1,12 @@
-import { IsString, IsBoolean, IsUrl, IsOptional, IsIn } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsString,
+  IsBoolean,
+  IsUrl,
+  IsOptional,
+  IsIn,
+  IsDate,
+} from 'class-validator';
 
 export class CreateDogDto {
   @IsString()
@@ -20,4 +28,9 @@ export class CreateDogDto {
   @IsBoolean()
   @IsOptional()
   status?: boolean;
+
+  @IsOptional()
+  @IsDate()
+  @Type(() => Date)
+  createdAt?: Date;
 }
