@@ -9,12 +9,14 @@ import { MoreThan, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import * as bcrypt from 'bcrypt';
 import dayjs from 'dayjs';
+import { RecoverMailService } from './RecoverMailService';
 
 @Injectable()
 export class RecoverService {
   constructor(
     @InjectRepository(User)
     private readonly UserRepository: Repository<User>,
+    private readonly mailerService: RecoverMailService,
   ) {}
 
   async requestPasswordReset(email: string) {
@@ -27,9 +29,8 @@ export class RecoverService {
     user.resetPasswordExpires = dayjs().add(1, 'hour').toDate();
     await this.UserRepository.save(user);
 
-    //Crea un link que el usuario podrá usar para cambiar la contraseña.
-    const url = `https://tusitio.com/reset-password?token=${token}`;
-    console.log('🔗 Enlace de recuperación:', url);
+    // ✅ Enviar correo al usuario
+    await this.mailerService.sendRecoveryLink(user, token);
 
     return { message: 'Enlace de recuperación enviado al correo electrónico.' };
   }

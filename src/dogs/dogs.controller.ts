@@ -7,25 +7,46 @@ import {
   Put,
   Patch,
   ParseUUIDPipe,
+  Query,
 } from '@nestjs/common';
 import { DogsService } from './dogs.service';
 import { CreateDogDto } from './dto/create-dog.dto';
 import { UpdateDogDto } from './dto/update-dog.dto';
 import { Dog } from './entities/dog.entity';
 import { AssignProductsDto } from './dto/assing-products.dto';
+import { Products } from 'src/products/entities/products.entity';
 
 @Controller('dogs')
 export class DogsController {
   constructor(private readonly dogsService: DogsService) {}
 
   @Get()
-  async findAll(): Promise<Dog[]> {
-    return this.dogsService.findAll();
+  async findAll(
+    @Query('name') name?: string,
+    @Query('gender') gender?: string,
+    @Query('city') city?: string,
+    @Query('page') page = 1,
+    @Query('limit') limit = 9,
+  ): Promise<{ data: Dog[]; total: number }> {
+    return await this.dogsService.findAllWithFilters({
+      name,
+      gender,
+      city,
+      page: +page,
+      limit: +limit,
+    });
   }
 
   @Get(':id')
   findOne(@Param('id') id: string): Promise<Dog> {
     return this.dogsService.findOne(id);
+  }
+
+  @Get(':id/products')
+  getProductsByDog(
+    @Param('id', ParseUUIDPipe) dogId: string,
+  ): Promise<Products[]> {
+    return this.dogsService.getProductsByDog(dogId);
   }
 
   @Post()
@@ -37,6 +58,7 @@ export class DogsController {
   update(@Param('id') id: string, @Body() updateDogDto: UpdateDogDto) {
     return this.dogsService.update(id, updateDogDto);
   }
+
   @Patch(':id/products')
   assignProductsToDo(
     @Param('id', ParseUUIDPipe) dogId: string,

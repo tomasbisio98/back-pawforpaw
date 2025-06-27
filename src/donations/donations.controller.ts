@@ -24,20 +24,18 @@ export class DonationController {
     private readonly stripeService: StripeService,
   ) {}
 
-  // --- RUTAS PÚBLICAS PRIMERO (sin token) ---
+  // Rutas públicas
   @Get('success')
   handleSuccess(@Query('donationId') donationId: string) {
     return { status: 'success', donationId };
-    // O redirige así:
-    // return res.redirect(`https://tu-frontend.com/gracias?donationId=${donationId}`);
   }
 
   @Get('cancel')
   handleCancel() {
-    return { status: 'cancelled' };
+    return { status: 'canceled' };
   }
 
-  // --- RUTAS PROTEGIDAS DESPUÉS ---
+  // Rutas protegidas
   @Get('mine')
   @Roles(Role.Admin)
   @UseGuards(AuthGuard, RolesGuard)
@@ -52,27 +50,24 @@ export class DonationController {
     return this.donationService.getDonationByUser(userId, pageNum, limitNum);
   }
 
-  @UseGuards(AuthGuard)
   @Post('checkout')
+  @UseGuards(AuthGuard)
   async checkout(@Request() req, @Body() dto: CreateDonationDto) {
     const userId = req.user.userId;
+    console.log('🧾 Payload recibido:', JSON.stringify(dto, null, 2));
+
     const donation = await this.donationService.createDonation(userId, dto);
-    return this.stripeService.createCheckoutSession(
+    const session = await this.stripeService.createCheckoutSession(
       donation.donationId,
       donation.totalValue,
     );
+
+    console.log('🔗 Stripe session:', session);
+    return { url: session.url }; // ✅ DEVUELVE SOLO LA URL
   }
 
-  @Get(':id')
-  @UseGuards(AuthGuard)
-  async getOne(@Param('id') donationId: string, @Request() req) {
-    const donation = await this.donationService.getDonationById(donationId);
-
-    const firstDonation = donation[0];
-    if (!firstDonation || firstDonation.userId !== req.user.userId) {
-      throw new ForbiddenException('No tienes acceso a esta donación');
-    }
-
-    return donation; // ✅ esto resuelve el error
+  @Get('historial')
+  async getHistorial() {
+    return this.donationService.getHistorial();
   }
 }

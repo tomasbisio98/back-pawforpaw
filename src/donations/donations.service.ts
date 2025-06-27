@@ -26,7 +26,7 @@ export class DonationService {
   // Actualiza el estado de una donación.
   async updateStatus(
     donationId: string,
-    status: 'PENDING' | 'COMPLETED' | 'CANCELED',
+    status: 'PENDING' | 'COMPLETED' | 'FAILED' | 'CANCELED',
   ): Promise<void> {
     const result = await this.donationRepo.update({ donationId }, { status });
     if (result.affected === 0) {
@@ -108,35 +108,68 @@ export class DonationService {
     return simpleResponse;
   }
 
-  // Obtiene una donación por su ID, con todas sus relaciones necesarias
-  async getDonationById(donationId: string): Promise<any[]> {
-    const donation = await this.donationRepo.findOne({
-      where: { donationId },
-      relations: [
-        'user',
-        'donationDetails',
-        'donationDetails.product',
-        'donationDetails.dogAssignments',
-        'donationDetails.dogAssignments.dog',
-      ],
-    });
+  async getHistorial() {
+    const historial = await this.donationRepo
+      .createQueryBuilder('donation')
+      .leftJoinAndSelect('donation.user', 'user')
+      .leftJoinAndSelect('donation.donationDetails', 'detail')
+      .leftJoinAndSelect('detail.product', 'product')
+      .leftJoinAndSelect('detail.dogAssignments', 'assignment')
+      .leftJoinAndSelect('assignment.dog', 'dog')
+      .select([
+        'donation',
+        'user.name',
+        'detail',
+        'product.name',
+        'assignment',
+        'dog.name',
+      ])
+      .getMany();
 
-    if (!donation) {
-      throw new NotFoundException(`Donación ${donationId} no encontrada`);
+    const resultado: {
+      id: string;
+      usuario: string;
+      producto: string;
+      perrito: string;
+      monto: number;
+      fecha: string;
+      estado: string;
+    }[] = [];
+
+    for (const d of historial) {
+      if (!Array.isArray(d.donationDetails)) continue;
+
+      for (const detail of d.donationDetails) {
+        if (!Array.isArray(detail.dogAssignments)) continue;
+
+        for (const assign of detail.dogAssignments) {
+          resultado.push({
+            id: d.donationId,
+            usuario: d.user?.name || 'Desconocido',
+            producto: detail.product?.name || 'Producto',
+            perrito: assign.dog?.name || 'Perrito',
+            monto: Number(detail.price_unit) || 0,
+            fecha: d.date.toISOString().split('T')[0],
+            estado: this.mapStatusToFrontend(d.status),
+          });
+        }
+      }
     }
 
-    const simpleResponse = donation.donationDetails.flatMap((detail) =>
-      detail.dogAssignments.map((assignment) => ({
-        donationId: donation.donationId,
-        fecha: donation.date,
-        producto: detail.product.name,
-        perrito: assignment.dog.name,
-        monto: parseFloat(donation.totalValue as any),
-        estado: donation.status,
-        userId: donation.user?.id,
-      })),
-    );
+    return resultado;
+  }
 
-    return simpleResponse;
+  private mapStatusToFrontend(status: string): string {
+    switch (status?.toUpperCase()) {
+      case 'COMPLETED':
+        return 'exitoso';
+      case 'PENDING':
+        return 'en proceso';
+      case 'CANCELED':
+      case 'FAILED':
+        return 'fallido';
+      default:
+        return 'desconocido';
+    }
   }
 }

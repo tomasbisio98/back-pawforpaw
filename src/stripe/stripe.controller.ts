@@ -1,8 +1,9 @@
-import { Controller, Post, Req, Res, Headers, Inject } from '@nestjs/common';
+import { Controller, Post, Req, Res, Headers } from '@nestjs/common';
+import { Response, Request } from 'express';
+import getRawBody from 'raw-body';
 import { StripeService } from './stripe.service';
 import { DonationService } from '../donations/donations.service';
-import { Response, Request } from 'express';
-import { DonationMailService } from 'src/donations/donations.mail.service';
+import { DonationMailService } from '../donations/donations.mail.service';
 
 @Controller('stripe/webhook')
 export class StripeWebhookController {
@@ -11,35 +12,31 @@ export class StripeWebhookController {
     private readonly donationService: DonationService,
     private donationMail: DonationMailService,
   ) {}
+
   @Post()
   async handleWebhook(
-    @Req() req: Request & { body: Buffer },
+    @Req() req: Request,
     @Res() res: Response,
     @Headers('stripe-signature') sig: string,
   ) {
-    console.log('📥 Webhook recibido'); // ESTE LOG DEBE SALIR
-    const rawBody = req.body;
-
     try {
-      const event = this.stripeService.validateWebhook(sig, rawBody);
+      // ✅ validar con el body crudo
+      const event = this.stripeService.validateWebhook(sig, req.body);
+
+      console.log('📥 Webhook recibido:', event.type);
 
       if (event.type === 'checkout.session.completed') {
         const session = event.data.object;
+        const donationId = session.metadata?.donationId;
         console.log('✅ Sesión completada:', session.id);
 
-        const donationId = session.metadata?.donationId;
         if (!donationId) {
           return res.status(400).send('Missing donationId in metadata');
         }
 
         await this.donationService.updateStatus(donationId, 'COMPLETED');
-
-        try {
-          await this.donationMail.sendDonationConfirmation(donationId);
-          console.log('📬 Correo enviado correctamente');
-        } catch (error) {
-          console.error('❌ Error al enviar correo:', error);
-        }
+        await this.donationMail.sendDonationConfirmation(donationId);
+        console.log('📬 Correo enviado correctamente');
       }
 
       return res.status(200).send('ok');

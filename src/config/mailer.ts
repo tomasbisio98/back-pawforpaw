@@ -14,6 +14,6 @@ export const mailerConfigFactory = (
     },
   } as TransportOptions,
   defaults: {
-    from: `Newsletter Fundación <${configService.get('MAIL_FROM')}>`,
+    from: `"Fundación PawForPaw" <${configService.get('MAIL_FROM')}>`,
   },
 });
