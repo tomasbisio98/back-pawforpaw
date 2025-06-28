@@ -12,7 +12,8 @@ export class StripeService {
   // ✅ Método para crear la sesión de pago
   async createCheckoutSession(donationId: string, amount: number) {
     try {
-      const baseUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+      const baseUrl =
+        'https://front-pawforpaw-git-dev-tomas-bisios-projects-736cb191.vercel.app';
 
       const session = await this.stripe.checkout.sessions.create({
         payment_method_types: ['card'],
