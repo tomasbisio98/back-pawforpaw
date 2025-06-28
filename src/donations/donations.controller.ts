@@ -22,17 +22,6 @@ export class DonationController {
     private readonly stripeService: StripeService,
   ) {}
 
-  // Rutas públicas
-  @Get('success')
-  handleSuccess(@Query('donationId') donationId: string) {
-    return { status: 'success', donationId };
-  }
-
-  @Get('cancel')
-  handleCancel() {
-    return { status: 'canceled' };
-  }
-
   // Rutas protegidas
   @Get('mine')
   @Roles(Role.Admin)
