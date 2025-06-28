@@ -15,7 +15,7 @@ async function bootstrap() {
   app.enableCors();
 
   // ✅ Excluye el webhook de ser parseado por bodyParser
-  app.use('/stripe/webhook', express.raw({ type: 'application/json' }));
+  app.use('/stripe/webhook', express.raw({ type: '*/*' }));
 
   // 4️⃣ JSON + URL-encoded bodies para todas las demás rutas
   app.use(bodyParser.json());
