@@ -12,14 +12,7 @@ export class StripeService {
   // ✅ Método para crear la sesión de pago
   async createCheckoutSession(donationId: string, amount: number) {
     try {
-<<<<<<< HEAD
       const baseUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
-=======
-      const baseUrl =
-        process.env.NODE_ENV === 'production'
-          ? process.env.FRONTEND_URL
-          : `http://localhost:3000`; // 👈 local solo frontend
->>>>>>> ebcb65735c7f3f53ca399caa766e1b3508bbc982
 
       const session = await this.stripe.checkout.sessions.create({
         payment_method_types: ['card'],
