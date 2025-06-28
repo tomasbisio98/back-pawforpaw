@@ -13,9 +13,8 @@ export class StripeService {
     try {
       const baseUrl =
         process.env.NODE_ENV === 'production'
-          ? process.env.BACKEND_URL
-          : process.env.FRONTEND_URL ||
-            `http://localhost:${process.env.PORT || 3001}`;
+          ? process.env.FRONTEND_URL
+          : `http://localhost:3000`; // 👈 local solo frontend
 
       const session = await this.stripe.checkout.sessions.create({
         payment_method_types: ['card'],
@@ -47,14 +46,5 @@ export class StripeService {
       console.error('❌ Error creando sesión de Stripe:', error);
       throw error;
     }
-  }
-
-  // para verificar la firma de los eventos webhook de Stripe.
-  validateWebhook(sig: string, body: Buffer): Stripe.Event {
-    return this.stripe.webhooks.constructEvent(
-      body,
-      sig,
-      process.env.STRIPE_WEBHOOK_SECRET!,
-    );
   }
 }
