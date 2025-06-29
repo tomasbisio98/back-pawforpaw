@@ -31,6 +31,10 @@ export class AuthService {
       throw new BadRequestException('¡Credenciales inválidas!');
     }
 
+    if (!user.status) {
+      throw new UnauthorizedException('Usuario inactivo. Contacte al administrador.');
+    }
+
     const userPayload = {
       sub: user.id,
       email: user.email,
@@ -40,7 +44,7 @@ export class AuthService {
     const token = this.jwtService.sign(userPayload);
 
     return {
-      token: token,
+      token,
       user: {
         id: user.id,
         name: user.name,
@@ -92,6 +96,10 @@ export class AuthService {
 
     let user = await this.usersRepository.getByEmail(email);
 
+    if (user && !user.status) {
+      throw new UnauthorizedException('Usuario inactivo. Contacte al administrador.');
+    }
+
     if (!user) {
       user = await this.usersRepository.createUser({
         email,
@@ -99,6 +107,7 @@ export class AuthService {
         password: '',
         phone: '0000000000',
         authProvider: 'google',
+        status: true, // 👈 opcional: define el estado por defecto
       });
     }
 
@@ -111,7 +120,7 @@ export class AuthService {
     const token = this.jwtService.sign(userPayload);
 
     return {
-      token: token, //ajuste menor para forzar el commit
+      token,
       user: {
         id: user.id,
         name: user.name,
