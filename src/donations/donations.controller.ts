@@ -14,6 +14,7 @@ import { StripeService } from 'src/stripe/stripe.service';
 import { Roles } from 'src/decorators/role/decorators.role';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Role } from 'src/enum/roles.enum';
+import { StatusGuard } from 'src/auth/guards/status.guard';
 
 @Controller('donations')
 export class DonationController {
@@ -25,7 +26,7 @@ export class DonationController {
   // Rutas protegidas
   @Get('mine')
   @Roles(Role.Admin)
-  @UseGuards(AuthGuard, RolesGuard)
+  @UseGuards(AuthGuard, RolesGuard, StatusGuard)
   getMyDonation(
     @Request() req,
     @Query('page') page?: string,
@@ -38,7 +39,7 @@ export class DonationController {
   }
 
   @Post('checkout')
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, StatusGuard)
   async checkout(@Request() req, @Body() dto: CreateDonationDto) {
     const userId = req.user.userId;
     console.log('🧾 Payload recibido:', JSON.stringify(dto, null, 2));
@@ -54,6 +55,7 @@ export class DonationController {
   }
 
   @Get('historial')
+  @UseGuards(StatusGuard)
   async getHistorial() {
     return this.donationService.getHistorial();
   }
