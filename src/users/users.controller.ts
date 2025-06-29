@@ -13,6 +13,7 @@ import {
 import { UserService } from './users.service';
 import { validateUser } from '../utils/validate';
 import { AuthGuard } from '../auth/guards/auth.guard';
+import { StatusGuard } from 'src/auth/guards/status.guard';
 import { UsersDbService } from './usersDb.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -55,6 +56,7 @@ export class UserController {
   @HttpCode(200)
   @Put(':id')
   //@UseGuards(AuthGuard)
+  @UseGuards(StatusGuard) // Guardian de status
   update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateUser: UpdateUserDto,
