@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Reflector } from '@nestjs/core';
-import { UserRepository } from 'src/users/users.repository';
+import { UserRepository } from 'src/users/users.repository'; // comentario para hacer nuevamente commit
 
 @Injectable()
 export class StatusGuard implements CanActivate {
