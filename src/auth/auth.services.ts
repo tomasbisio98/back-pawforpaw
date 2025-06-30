@@ -53,6 +53,7 @@ export class AuthService {
         email: user.email,
         isAdmin: user.isAdmin,
         phone: user.phone,
+        profileImgUrl: user.profileImgUrl,
       },
     };
   }
@@ -130,6 +131,7 @@ export class AuthService {
         name: user.name,
         email: user.email,
         isAdmin: user.isAdmin,
+        profileImgUrl: user.profileImgUrl,
       },
     };
   }

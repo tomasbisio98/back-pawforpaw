@@ -11,7 +11,14 @@ async function bootstrap() {
 
   // 2️⃣ Middleware y validación global
   app.use(loggerGlobal);
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    }),
+  );
+
   app.enableCors({
     origin: ['http://localhost:3000'],
     credentials: true,

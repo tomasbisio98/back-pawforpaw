@@ -3,7 +3,7 @@ import { IsOptional, IsString, Length, IsBoolean } from 'class-validator';
 export class UpdateUserDto {
   @IsOptional()
   @IsString()
-  @Length(3, 20)
+  @Length(3, 60)
   name?: string;
 
   @IsOptional()
