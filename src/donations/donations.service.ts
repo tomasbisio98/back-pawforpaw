@@ -162,14 +162,14 @@ export class DonationService {
   private mapStatusToFrontend(status: string): string {
     switch (status?.toUpperCase()) {
       case 'COMPLETED':
-        return 'exitoso';
+        return 'Exitoso';
       case 'PENDING':
-        return 'en proceso';
+        return 'En proceso';
       case 'CANCELED':
       case 'FAILED':
-        return 'fallido';
+        return 'Fallido';
       default:
-        return 'desconocido';
+        return 'Desconocido';
     }
   }
 }

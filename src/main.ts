@@ -12,7 +12,10 @@ async function bootstrap() {
   // 2️⃣ Middleware y validación global
   app.use(loggerGlobal);
   app.useGlobalPipes(new ValidationPipe());
-  app.enableCors();
+  app.enableCors({
+    origin: ['http://localhost:3000'],
+    credentials: true,
+  });
 
   // ✅ Excluye el webhook de ser parseado por bodyParser
   app.use('/stripe/webhook', express.raw({ type: '*/*' }));
