@@ -2,7 +2,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './users.entity';
 import { Repository } from 'typeorm';
 import { NotFoundException, BadRequestException } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 export class UserRepository {
@@ -15,7 +14,7 @@ export class UserRepository {
     limit: number = 20,
     orderBy: 'name',
     order: 'asc' | 'desc' = 'asc',
-    status?: 'activo' | 'inactivo'
+    status?: 'activo' | 'inactivo',
   ): Promise<Partial<User>[]> {
     const validOrderFields = ['name', 'email', 'phone', 'createdAt'];
     const safeOrderBy = validOrderFields.includes(orderBy) ? orderBy : 'name';
@@ -69,10 +68,7 @@ export class UserRepository {
     return userWithoutPassword as User;
   }
 
-  async update(
-    id: string,
-    user: Partial<UpdateUserDto>,
-  ): Promise<Partial<User>> {
+  async update(id: string, user: UpdateUserDto): Promise<Partial<User>> {
     await this.usersRepository.update(id, user);
 
     const updateUser = await this.usersRepository.findOneBy({ id });
