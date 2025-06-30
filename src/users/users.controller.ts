@@ -41,7 +41,6 @@ export class UserController {
     @Query('orderBy') orderBy: 'name',
     @Query('order') order: 'asc' | 'desc' = 'asc',
     @Query('status') status?: 'activo' | 'inactivo',
-  
   ) {
     return this.usersService.getUsers(page, limit, orderBy, order, status);
   }
