@@ -23,7 +23,7 @@ export class DogsController {
   constructor(private readonly dogsService: DogsService) {}
 
   @Get()
-  @UseGuards(StatusGuard)
+  // @UseGuards(StatusGuard)
   async findAll(
     @Query('name') name?: string,
     @Query('gender') gender?: string,
@@ -41,13 +41,13 @@ export class DogsController {
   }
 
   @Get(':id')
-  @UseGuards(StatusGuard)
+  // @UseGuards(StatusGuard)
   findOne(@Param('id') id: string): Promise<Dog> {
     return this.dogsService.findOne(id);
   }
 
   @Get(':id/products')
-  @UseGuards(StatusGuard)
+  // @UseGuards(StatusGuard)
   getProductsByDog(
     @Param('id', ParseUUIDPipe) dogId: string,
   ): Promise<Products[]> {
@@ -55,19 +55,20 @@ export class DogsController {
   }
 
   @Post()
-  @UseGuards(StatusGuard)
+  // @UseGuards(StatusGuard)
   create(@Body() createDogDto: CreateDogDto): Promise<Dog> {
+    console.log('🎯 Datos recibidos:', createDogDto);
     return this.dogsService.create(createDogDto);
   }
 
   @Put(':id')
-  @UseGuards(StatusGuard)
+  // @UseGuards(StatusGuard)
   update(@Param('id') id: string, @Body() updateDogDto: UpdateDogDto) {
     return this.dogsService.update(id, updateDogDto);
   }
 
   @Patch(':id/products')
-  @UseGuards(StatusGuard)
+  // @UseGuards(StatusGuard)
   assignProductsToDo(
     @Param('id', ParseUUIDPipe) dogId: string,
     @Body() assignProductsDto: AssignProductsDto,
