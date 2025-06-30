@@ -16,8 +16,9 @@ export class CreateDogDto {
   @IsIn(['M', 'H'], { message: 'Sex must be either "M" or "H"' })
   sex: 'M' | 'H';
 
+  @IsOptional()
   @IsUrl()
-  imgUrl: string;
+  imgUrl?: string;
 
   @IsString()
   description: string;

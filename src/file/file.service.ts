@@ -31,7 +31,7 @@ export class FilesService {
       imgUrl: uploadResponse.secure_url,
     });
 
-    return 'Imagen cargada';
+    return { imageUrl: uploadResponse.secure_url };
   }
 
   // Sube una imagen y la asigna a un perrito
@@ -47,7 +47,7 @@ export class FilesService {
       imgUrl: uploadResponse.secure_url,
     });
 
-    return 'Imagen cargada';
+    return { imageUrl: uploadResponse.secure_url };
   }
 
   // Sube una imagen y la asigna a un usuario
@@ -63,6 +63,6 @@ export class FilesService {
       profileImgUrl: uploadResponse.secure_url,
     });
 
-    return 'Imagen cargada';
+    return { imageUrl: uploadResponse.secure_url };
   }
 }

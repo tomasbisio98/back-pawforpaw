@@ -43,7 +43,19 @@ export class FileController {
   @UseInterceptors(FileInterceptor('file'))
   uploadDogImage(
     @Param('dogId', ParseUUIDPipe) dogId: string,
-    @UploadedFile()
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({
+            maxSize: 1000000, // 1 MB
+            message: 'El archivo es demasiado grande. Máx. 1MB.',
+          }),
+          new FileTypeValidator({
+            fileType: /image\/(jpeg|jpg|png|webp)/,
+          }),
+        ],
+      }),
+    )
     file: Express.Multer.File,
   ) {
     return this.fileService.uploadDogImage(file, dogId);
