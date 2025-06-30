@@ -32,7 +32,9 @@ export class AuthService {
     }
 
     if (!user.status) {
-      throw new UnauthorizedException('Usuario inactivo. Contacte al administrador.');
+      throw new UnauthorizedException(
+        'Usuario inactivo. Contacte al administrador.',
+      );
     }
 
     const userPayload = {
@@ -97,7 +99,9 @@ export class AuthService {
     let user = await this.usersRepository.getByEmail(email);
 
     if (user && !user.status) {
-      throw new UnauthorizedException('Usuario inactivo. Contacte al administrador.');
+      throw new UnauthorizedException(
+        'Usuario inactivo. Contacte al administrador.',
+      );
     }
 
     if (!user) {
