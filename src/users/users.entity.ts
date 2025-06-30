@@ -44,7 +44,7 @@ export class User {
   @Column({
     type: 'text',
     default:
-      'https://drive.google.com/file/d/1cgd_yxHskzKR7u9bIOhpfYbX6BTGtt6l/view?usp=drive_link',
+      'https://res.cloudinary.com/dziccimdv/image/upload/v1751237681/hi8omp4nzacrabbwflfr.png', //Se agrega Imagen de cloudinary por defecto al perfil de usuario
   })
   profileImgUrl: string;
 
