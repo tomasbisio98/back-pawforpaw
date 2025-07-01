@@ -9,6 +9,7 @@ import { Donation } from './entities/donation.entity';
 import { DonationDetail } from './entities/donation-detail.entity';
 import { DonationDetailDogs } from './entities/donation-detail-dog.entity';
 import { CreateDonationDto } from './dto/createDonations.dto';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class DonationService {
@@ -21,6 +22,8 @@ export class DonationService {
 
     @InjectRepository(DonationDetailDogs)
     private donationDetailDogsRepo: Repository<DonationDetailDogs>,
+
+    private readonly mailer: MailerService,
   ) {}
 
   // Actualiza el estado de una donación.
@@ -28,9 +31,54 @@ export class DonationService {
     donationId: string,
     status: 'PENDING' | 'COMPLETED' | 'FAILED' | 'CANCELED',
   ): Promise<void> {
-    const result = await this.donationRepo.update({ donationId }, { status });
-    if (result.affected === 0) {
+    const donation = await this.donationRepo.findOne({
+      where: { donationId },
+      relations: ['user'],
+    });
+
+    if (!donation) {
       throw new NotFoundException(`Donación ${donationId} no encontrada`);
+    }
+
+    donation.status = status;
+    await this.donationRepo.save(donation);
+
+    // ✅ Enviar correo SOLO si es FALLIDO o CANCELADO
+    if (status === 'FAILED' || status === 'CANCELED') {
+      try {
+        const info = await this.mailer.sendMail({
+          from: `"Fundación PawForPaw 🐾 Donaciones" <${process.env.MAIL_FROM}>`,
+          to: donation.user.email,
+          subject: '⚠️ Hubo un problema con tu donación',
+          text: `Hola ${donation.user.name}, lamentablemente tu donación de ${donation.totalValue} USD realizada el ${donation.date.toLocaleString()} no pudo procesarse.
+
+Puedes intentar nuevamente ingresando a https://front-pawforpaw-one.vercel.app/perritos
+
+Gracias por tu intención de ayudar a nuestros perritos.`,
+          html: `
+          <div style="font-family: sans-serif; line-height: 1.5; color: #333;">
+            <h2 style="color: #e53935;">⚠️ Hubo un problema con tu donación</h2>
+            <p>Hola ${donation.user.name},</p>
+            <p>Lamentablemente tu donación de <strong>${donation.totalValue} USD</strong> realizada el <strong>${donation.date.toLocaleString()}</strong> no pudo procesarse.</p>
+            <p>Si deseas, puedes volver a intentarlo haciendo clic aquí:</p>
+            <a href="https://front-pawforpaw-one.vercel.app/perritos" style="
+              display: inline-block;
+              padding: 10px 20px;
+              background-color: #e53935;
+              color: white;
+              text-decoration: none;
+              border-radius: 5px;
+              font-weight: bold;
+            ">Reintentar Donación</a>
+            <p>Gracias por tu intención de ayudar a nuestros perritos.</p>
+            <p>Con cariño,<br>El equipo de PawForPaw 🐾</p>
+          </div>
+        `,
+        });
+        console.log('✉️ Email de donación fallida enviado:', info);
+      } catch (err) {
+        console.error('❌ Error enviando email de donación fallida:', err);
+      }
     }
   }
 
