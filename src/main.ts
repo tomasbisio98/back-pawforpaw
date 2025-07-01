@@ -20,7 +20,11 @@ async function bootstrap() {
   );
 
   app.enableCors({
-    origin: ['http://localhost:3000'],
+    origin: [
+      'http://localhost:3000',
+      'https://front-pawforpaw.vercel.app', // tu producción
+      'https://front-pawforpaw-git-dev-tomas-bisios-projects-736cb191.vercel.app', // tu rama dev en Vercel
+    ],
     credentials: true,
   });
 
