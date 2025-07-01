@@ -28,8 +28,10 @@ async function bootstrap() {
     credentials: true,
   });
 
-  // ✅ Excluye el webhook de ser parseado por bodyParser
-  app.use('/stripe/webhook', express.raw({ type: '*/*' }));
+  app.use(
+    '/stripe/webhook',
+    express.raw({ type: 'application/json', limit: '1mb' }),
+  );
 
   // 4️⃣ JSON + URL-encoded bodies para todas las demás rutas
   app.use(bodyParser.json());
