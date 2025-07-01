@@ -30,7 +30,7 @@ export class UpdateProductDto {
   })
   @IsOptional()
   @IsString()
-  imageUrl?: string;
+  imgUrl?: string;
 
   @ApiProperty({
     description: 'true || false',
