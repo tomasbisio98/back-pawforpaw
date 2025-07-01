@@ -11,11 +11,7 @@ import {
   ParseUUIDPipe,
 } from '@nestjs/common';
 import { UserService } from './users.service';
-import { validateUser } from '../utils/validate';
-import { AuthGuard } from '../auth/guards/auth.guard';
-import { StatusGuard } from 'src/auth/guards/status.guard';
 import { UsersDbService } from './usersDb.service';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../decorators/role/decorators.role';
@@ -54,8 +50,7 @@ export class UserController {
 
   @HttpCode(200)
   @Put(':id')
-  //@UseGuards(AuthGuard)
-  @UseGuards(StatusGuard) // Guardian de status
+  // @UseGuards(AuthGuard)
   update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateUser: UpdateUserDto,

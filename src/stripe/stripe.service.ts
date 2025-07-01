@@ -12,8 +12,8 @@ export class StripeService {
   // ✅ Método para crear la sesión de pago
   async createCheckoutSession(donationId: string, amount: number) {
     try {
-      const baseUrl =
-        'https://front-pawforpaw-git-dev-tomas-bisios-projects-736cb191.vercel.app';
+      // Elegimos FRONTEND_URL o, si no está, asumimos localhost
+      const frontUrl = process.env.FRONTEND_URL ?? 'http://localhost:3000';
 
       const session = await this.stripe.checkout.sessions.create({
         payment_method_types: ['card'],
@@ -32,8 +32,8 @@ export class StripeService {
         ],
         mode: 'payment',
         client_reference_id: donationId,
-        success_url: `${baseUrl}/donations/success?donationId=${donationId}`,
-        cancel_url: `${baseUrl}/donations/cancel`,
+        success_url: `${frontUrl}/donations/success?donationId=${donationId}`,
+        cancel_url: `${frontUrl}/donations/cancel`,
         metadata: { donationId },
         payment_intent_data: {
           metadata: { donationId },
