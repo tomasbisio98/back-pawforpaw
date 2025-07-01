@@ -39,7 +39,15 @@ export class UserController {
     @Query('order') order: 'asc' | 'desc' = 'asc',
     @Query('status') status?: 'activo' | 'inactivo',
   ) {
-    return this.usersService.getUsers(page, limit, orderBy, order, status);
+    const safePage = Math.max(1, page);
+    const safeLimit = Math.min(Math.max(1, limit), 100); // Limita entre 1 y 100
+    return this.usersService.getUsers(
+      safePage,
+      safeLimit,
+      orderBy,
+      order,
+      status,
+    );
   }
 
   @HttpCode(200)
@@ -57,11 +65,13 @@ export class UserController {
     @Body() updateUser: UpdateUserDto,
   ) {
     console.log('📥 Body recibido:', updateUser);
-    if (!validateUserUpdate(updateUser)) {
-      throw new BadRequestException('Usuario no válido');
-    }
 
-    return this.usersService.update(id, updateUser);
+    // Limpia manualmente campos undefined
+    const cleanData = Object.fromEntries(
+      Object.entries(updateUser).filter(([_, value]) => value !== undefined),
+    );
+
+    return this.usersService.update(id, cleanData as UpdateUserDto);
   }
 
   @HttpCode(200)

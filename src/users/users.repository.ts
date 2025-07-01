@@ -15,30 +15,27 @@ export class UserRepository {
     orderBy: 'name',
     order: 'asc' | 'desc' = 'asc',
     status?: 'activo' | 'inactivo',
-  ): Promise<Partial<User>[]> {
+  ): Promise<{ data: Partial<User>[]; total: number }> {
     const validOrderFields = ['name', 'email', 'phone', 'createdAt'];
     const safeOrderBy = validOrderFields.includes(orderBy) ? orderBy : 'name';
 
-    let users = await this.usersRepository.find({
-      order: {
-        [safeOrderBy]: order === 'asc' ? 'ASC' : 'DESC',
-      },
+    const where: any = {};
+    if (status === 'activo') where.status = true;
+    else if (status === 'inactivo') where.status = false;
+
+    // ✅ Corrección clave aquí:
+    page = Math.max(1, page);
+
+    const [users, total] = await this.usersRepository.findAndCount({
+      where,
+      order: { [safeOrderBy]: order.toUpperCase() as 'ASC' | 'DESC' },
+      skip: (page - 1) * limit,
+      take: limit,
     });
 
-    // ✅ FILTRADO POR STATUS
-    if (status === 'activo') {
-      users = users.filter((user) => user.status === true);
-    } else if (status === 'inactivo') {
-      users = users.filter((user) => user.status === false);
-    }
+    const sanitizedUsers = users.map(({ password, ...user }) => user);
 
-    // ✅ PAGINACIÓN
-    const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + limit;
-    const paginatedUsers = users.slice(startIndex, endIndex);
-
-    // ✅ RETORNO SIN PASSWORD
-    return paginatedUsers.map(({ password, ...user }) => user);
+    return { data: sanitizedUsers, total };
   }
 
   async getById(id: string): Promise<Partial<User>> {
