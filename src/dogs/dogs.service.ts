@@ -117,12 +117,14 @@ export class DogsService {
     city,
     page = 1,
     limit = 9,
+    sort,
   }: {
     name?: string;
     gender?: string;
     city?: string;
     page: number;
     limit: number;
+    sort?: string;
   }): Promise<{ data: Dog[]; total: number }> {
     const where: any = {};
 
@@ -137,12 +139,16 @@ export class DogsService {
     if (city) {
       where.city = ILike(`%${city}%`);
     }
+    let order: any = { createdAt: 'DESC' };
+    if (sort === 'name') {
+      order = { name: 'ASC' };
+    }
 
     const [data, total] = await this.dogRepository.findAndCount({
       where,
       take: limit,
       skip: (page - 1) * limit,
-      order: { createdAt: 'DESC' },
+      order,
     });
 
     return { data, total };

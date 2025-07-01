@@ -29,6 +29,7 @@ export class DogsController {
     @Query('city') city?: string,
     @Query('page') page = 1,
     @Query('limit') limit = 9,
+    @Query('sort') sort?: string,
   ): Promise<{ data: Dog[]; total: number }> {
     return await this.dogsService.findAllWithFilters({
       name,
@@ -36,6 +37,7 @@ export class DogsController {
       city,
       page: +page,
       limit: +limit,
+      sort,
     });
   }
 
