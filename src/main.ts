@@ -24,7 +24,7 @@ async function bootstrap() {
       'http://localhost:3000',
       'https://front-pawforpaw.vercel.app', // tu producción
       'https://front-pawforpaw-git-dev-tomas-bisios-projects-736cb191.vercel.app',
-      'https://front-pawforpaw-one.vercel.app/',
+      'https://front-pawforpaw-one.vercel.app',
     ],
     credentials: true,
   });
