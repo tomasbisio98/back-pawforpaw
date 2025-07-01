@@ -9,6 +9,7 @@ import {
   Query,
   UseGuards,
   ParseUUIDPipe,
+  BadRequestException,
 } from '@nestjs/common';
 import { UserService } from './users.service';
 import { UsersDbService } from './usersDb.service';
@@ -55,10 +56,12 @@ export class UserController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateUser: UpdateUserDto,
   ) {
-    if (validateUserUpdate(updateUser)) {
-      return this.usersService.update(id, updateUser);
+    console.log('📥 Body recibido:', updateUser);
+    if (!validateUserUpdate(updateUser)) {
+      throw new BadRequestException('Usuario no válido');
     }
-    return 'Usuario no válido';
+
+    return this.usersService.update(id, updateUser);
   }
 
   @HttpCode(200)

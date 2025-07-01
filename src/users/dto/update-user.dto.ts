@@ -1,19 +1,19 @@
-import { IsOptional, IsString, Length, IsBoolean } from 'class-validator';
+import { IsOptional, IsString, IsBoolean } from 'class-validator';
 
 export class UpdateUserDto {
   @IsOptional()
   @IsString()
-  @Length(3, 60)
   name?: string;
 
   @IsOptional()
-  phone?: string;
-
-  @IsOptional()
   @IsString()
-  profileImgUrl?: string; // ✅ Este campo debe existir
+  phone?: string;
 
   @IsOptional()
   @IsBoolean()
   status?: boolean;
+
+  @IsOptional()
+  @IsString()
+  profileImgUrl?: string; // ✅ Agregado para permitir la imagen
 }
