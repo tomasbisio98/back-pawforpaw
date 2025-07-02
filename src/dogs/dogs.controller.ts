@@ -28,22 +28,31 @@ export class DogsController {
     @Query('gender') gender?: string,
     @Query('city') city?: string,
     @Query('page') page = 1,
-    @Query('limit') limit = 9,
+    @Query('limit') limit = 10,
     @Query('sort') sort?: string,
+    @Query('status') status?: string, // 👈 cambia el tipo a string
   ): Promise<{ data: Dog[]; total: number }> {
     return await this.dogsService.findAllWithFilters({
       name,
       gender,
       city,
-      page: +page,
-      limit: +limit,
+      page: Number(page),
+      limit: Number(limit),
       sort,
+      status: status !== undefined ? status === 'true' : undefined, // ✅ parsea a boolean,
     });
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<Dog> {
-    return this.dogsService.findOne(id);
+  async findOne(
+    @Param('id') id: string,
+    @Query('onlyActiveProducts') onlyActiveProducts?: string,
+  ) {
+    const dog = await this.dogsService.findOne(
+      id,
+      onlyActiveProducts === 'true',
+    );
+    return dog;
   }
 
   @Get(':id/products')

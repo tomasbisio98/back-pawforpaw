@@ -19,18 +19,51 @@ export class DogsService {
     private readonly newsletterService: NewsletterService,
   ) {}
 
-  async findAll(): Promise<Dog[]> {
-    return await this.dogRepository.find();
+  async findAll({
+    page = 1,
+    limit = 10,
+  }: {
+    page?: number;
+    limit?: number;
+  }): Promise<{ data: Dog[]; total: number }> {
+    // 1️⃣ Obtener activos ordenados por fecha descendente
+    const activeDogs = await this.dogRepository.find({
+      where: { status: true },
+      order: { createdAt: 'DESC' },
+    });
+
+    // 2️⃣ Obtener inactivos ordenados por fecha descendente
+    const inactiveDogs = await this.dogRepository.find({
+      where: { status: false },
+      order: { createdAt: 'DESC' },
+    });
+
+    // 3️⃣ Concatenar activos + inactivos
+    const allDogs = [...activeDogs, ...inactiveDogs];
+
+    // 4️⃣ Calcular índices de paginación
+    const startIndex = (page - 1) * limit;
+    const endIndex = startIndex + limit;
+
+    // 5️⃣ Obtener datos paginados
+    const data = allDogs.slice(startIndex, endIndex);
+
+    // 6️⃣ Devolver con el total correcto
+    return { data, total: allDogs.length };
   }
 
-  async findOne(id: string): Promise<Dog> {
+  async findOne(id: string, onlyActiveProducts = false): Promise<Dog> {
     const dog = await this.dogRepository.findOne({
       where: { dogId: id },
-      relations: ['products'], // 👈 incluye los productos asignados
+      relations: ['products'],
     });
 
     if (!dog) {
       throw new NotFoundException(`Dog with id ${id} not found`);
+    }
+
+    if (onlyActiveProducts) {
+      dog.products = dog.products.filter((product) => product.status === true);
     }
 
     return dog;
@@ -118,6 +151,7 @@ export class DogsService {
     page = 1,
     limit = 9,
     sort,
+    status,
   }: {
     name?: string;
     gender?: string;
@@ -125,6 +159,7 @@ export class DogsService {
     page: number;
     limit: number;
     sort?: string;
+    status?: boolean;
   }): Promise<{ data: Dog[]; total: number }> {
     const where: any = {};
 
@@ -139,6 +174,13 @@ export class DogsService {
     if (city) {
       where.city = ILike(`%${city}%`);
     }
+
+    if (status === true) {
+      where.status = true;
+    } else if (status === false) {
+      where.status = false;
+    }
+
     let order: any = { createdAt: 'DESC' };
     if (sort === 'name') {
       order = { name: 'ASC' };
