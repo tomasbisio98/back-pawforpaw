@@ -28,16 +28,18 @@ export class DogsController {
     @Query('gender') gender?: string,
     @Query('city') city?: string,
     @Query('page') page = 1,
-    @Query('limit') limit = 9,
+    @Query('limit') limit = 10,
     @Query('sort') sort?: string,
+    @Query('status') status?: string, // 👈 cambia el tipo a string
   ): Promise<{ data: Dog[]; total: number }> {
     return await this.dogsService.findAllWithFilters({
       name,
       gender,
       city,
-      page: +page,
-      limit: +limit,
+      page: Number(page),
+      limit: Number(limit),
       sort,
+      status: status !== undefined ? status === 'true' : undefined, // ✅ parsea a boolean,
     });
   }
 
