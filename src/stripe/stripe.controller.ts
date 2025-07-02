@@ -24,18 +24,57 @@ export class StripeWebhookController {
 
       console.log('📥 Webhook recibido:', event.type);
 
-      if (event.type === 'checkout.session.completed') {
-        const session = event.data.object;
-        const donationId = session.metadata?.donationId;
-        console.log('✅ Sesión completada:', session.id);
+      switch (event.type) {
+        case 'checkout.session.completed': {
+          const session = event.data.object;
+          const donationId = session.metadata?.donationId;
+          console.log('✅ Sesión completada:', session.id);
 
-        if (!donationId) {
-          return res.status(400).send('Missing donationId in metadata');
+          if (!donationId) {
+            return res.status(400).send('Missing donationId in metadata');
+          }
+
+          await this.donationService.updateStatus(donationId, 'COMPLETED');
+          await this.donationMail.sendDonationConfirmation(donationId);
+          console.log('📬 Correo enviado correctamente');
+          break;
         }
 
-        await this.donationService.updateStatus(donationId, 'COMPLETED');
-        await this.donationMail.sendDonationConfirmation(donationId);
-        console.log('📬 Correo enviado correctamente');
+        case 'payment_intent.payment_failed': {
+          const paymentIntent = event.data.object;
+          const donationId = paymentIntent.metadata?.donationId;
+          console.warn('❌ Pago fallido:', paymentIntent.id);
+
+          if (donationId) {
+            await this.donationService.updateStatus(donationId, 'FAILED');
+          }
+          break;
+        }
+
+        case 'checkout.session.expired': {
+          const session = event.data.object;
+          const donationId = session.metadata?.donationId;
+          console.warn('⏰ Sesión expirada:', session.id);
+
+          if (donationId) {
+            await this.donationService.updateStatus(donationId, 'CANCELED');
+          }
+          break;
+        }
+
+        case 'checkout.session.async_payment_failed': {
+          const session = event.data.object;
+          const donationId = session.metadata?.donationId;
+          console.warn('❌ Pago fallido (async):', session.id);
+
+          if (donationId) {
+            await this.donationService.updateStatus(donationId, 'FAILED');
+          }
+          break;
+        }
+
+        default:
+          console.log(`ℹ️ Evento no manejado: ${event.type}`);
       }
 
       return res.status(200).send('ok');
