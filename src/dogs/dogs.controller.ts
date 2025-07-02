@@ -44,8 +44,15 @@ export class DogsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<Dog> {
-    return this.dogsService.findOne(id);
+  async findOne(
+    @Param('id') id: string,
+    @Query('onlyActiveProducts') onlyActiveProducts?: string,
+  ) {
+    const dog = await this.dogsService.findOne(
+      id,
+      onlyActiveProducts === 'true',
+    );
+    return dog;
   }
 
   @Get(':id/products')

@@ -52,14 +52,18 @@ export class DogsService {
     return { data, total: allDogs.length };
   }
 
-  async findOne(id: string): Promise<Dog> {
+  async findOne(id: string, onlyActiveProducts = false): Promise<Dog> {
     const dog = await this.dogRepository.findOne({
       where: { dogId: id },
-      relations: ['products'], // 👈 incluye los productos asignados
+      relations: ['products'],
     });
 
     if (!dog) {
       throw new NotFoundException(`Dog with id ${id} not found`);
+    }
+
+    if (onlyActiveProducts) {
+      dog.products = dog.products.filter((product) => product.status === true);
     }
 
     return dog;
