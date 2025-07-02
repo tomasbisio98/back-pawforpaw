@@ -213,11 +213,15 @@ Gracias por tu intención de ayudar a nuestros perritos.`,
         return 'Exitoso';
       case 'PENDING':
         return 'En proceso';
-      case 'CANCELED':
       case 'FAILED':
         return 'Fallido';
+      case 'CANCELED':
+        return 'Cancelado';
       default:
         return 'Desconocido';
     }
+  }
+  async findOneBy(where: Partial<Donation>): Promise<Donation | null> {
+    return this.donationRepo.findOneBy(where);
   }
 }
