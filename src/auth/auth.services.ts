@@ -109,6 +109,11 @@ export class AuthService {
         'Usuario inactivo. Contacte al administrador.',
       );
     }
+    if (user && user.isBanned) {
+      throw new UnauthorizedException(
+        'Tu cuenta ha sido baneada. Contacte al administrador.',
+      );
+    }
 
     if (!user) {
       user = await this.usersRepository.createUser({
