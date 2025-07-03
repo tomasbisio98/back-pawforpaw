@@ -22,13 +22,10 @@ export class StripeWebhookController {
       // ✅ validar con el body crudo
       const event = this.stripeService.validateWebhook(sig, req.body);
 
-      console.log('📥 Webhook recibido:', event.type);
-
       switch (event.type) {
         case 'checkout.session.completed': {
           const session = event.data.object;
           const donationId = session.metadata?.donationId;
-          console.log('✅ Sesión completada:', session.id);
 
           if (!donationId) {
             return res.status(400).send('Missing donationId in metadata');
@@ -36,7 +33,6 @@ export class StripeWebhookController {
 
           await this.donationService.updateStatus(donationId, 'COMPLETED');
           await this.donationMail.sendDonationConfirmation(donationId);
-          console.log('📬 Correo enviado correctamente');
           break;
         }
 

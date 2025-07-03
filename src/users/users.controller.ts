@@ -66,8 +66,6 @@ export class UserController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateUser: UpdateUserDto,
   ) {
-    console.log('📥 Body recibido:', updateUser);
-
     const cleanData = Object.fromEntries(
       Object.entries(updateUser).filter(([_, value]) => value !== undefined),
     );

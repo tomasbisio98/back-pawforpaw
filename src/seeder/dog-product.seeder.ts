@@ -19,7 +19,6 @@ export class DogProductSeeder {
     const products = await this.productRepository.find();
 
     if (!dogs.length || !products.length) {
-      console.log('⚠️ No hay perros o productos para asignar.');
       return;
     }
 

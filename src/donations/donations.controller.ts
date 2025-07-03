@@ -59,7 +59,6 @@ export class DonationController {
   @UseGuards(AuthGuard)
   async checkout(@Request() req, @Body() dto: CreateDonationDto) {
     const userId = req.user.userId;
-    console.log('🧾 Payload recibido:', JSON.stringify(dto, null, 2));
 
     const donation = await this.donationService.createDonation(userId, dto);
     const session = await this.stripeService.createCheckoutSession(
@@ -67,7 +66,6 @@ export class DonationController {
       donation.totalValue,
     );
 
-    console.log('🔗 Stripe session:', session);
     return { url: session.url };
   }
 

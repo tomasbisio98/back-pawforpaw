@@ -69,7 +69,6 @@ export class DogsController {
   @ApiOperation({ summary: 'Create a new Dog' })
   @Post()
   create(@Body() createDogDto: CreateDogDto): Promise<Dog> {
-    console.log('🎯 Datos recibidos:', createDogDto);
     return this.dogsService.create(createDogDto);
   }
 
