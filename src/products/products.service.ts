@@ -58,7 +58,6 @@ export class ProductsService {
       where: { productId: id },
     });
     if (!product) throw new NotFoundException('Producto no encontrado');
-    console.log('📥 Datos recibidos para actualizar:', data);
     const updated = Object.assign(product, data);
     await this.productRepo.save(updated);
     return {

@@ -49,7 +49,6 @@ export class DonationMailService {
       </div>
     `,
       });
-      console.log('✉️ Email enviado:', info);
     } catch (err) {
       console.error('❌ Error enviando email:', err);
     }

@@ -11,7 +11,6 @@ export class UserAdminSeeder {
 
     const existingUser = await this.userService.getByEmail(email);
     if (existingUser) {
-      console.log(`ℹ️ El usuario admin con email ${email} ya existe.`);
       return;
     }
 

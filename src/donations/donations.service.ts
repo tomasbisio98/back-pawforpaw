@@ -75,7 +75,6 @@ Gracias por tu intención de ayudar a nuestros perritos.`,
           </div>
         `,
         });
-        console.log('✉️ Email de donación fallida enviado:', info);
       } catch (err) {
         console.error('❌ Error enviando email de donación fallida:', err);
       }
