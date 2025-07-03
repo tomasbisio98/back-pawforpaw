@@ -70,12 +70,10 @@ export class StripeWebhookController {
         }
 
         default:
-          console.log(`ℹ️ Evento no manejado: ${event.type}`);
       }
 
       return res.status(200).send('ok');
     } catch (err) {
-      console.error('❌ Error en webhook:', err.message);
       return res.status(400).send(`Webhook Error: ${err.message}`);
     }
   }

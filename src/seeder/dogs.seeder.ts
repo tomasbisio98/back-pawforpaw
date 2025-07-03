@@ -143,6 +143,5 @@ export async function seedDogs(dataSource: DataSource) {
 
   if (count === 0) {
     await dogRepo.save(dogs);
-    console.log('🐶 Seed: dogs insertados');
   }
 }

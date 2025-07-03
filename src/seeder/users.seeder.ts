@@ -292,6 +292,5 @@ export async function seedUsers(dataSource: DataSource) {
     );
 
     await repo.save(usersHashed);
-    console.log('👤 Seed: usuarios insertados con contraseña hasheada');
   }
 }

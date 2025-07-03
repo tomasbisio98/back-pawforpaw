@@ -255,6 +255,5 @@ export async function seedProducts(dataSource: DataSource) {
 
   if (count === 0) {
     await repo.save(products);
-    console.log('📦 Seed: productos insertados');
   }
 }

@@ -38,13 +38,11 @@ export class SeedService implements OnApplicationBootstrap {
       // Make sure the path and export are correct
       const { dogs } = await import('./dogs.seeder');
       await this.dogRepository.save(dogs);
-      console.log('🐶 Seed: 15 dogs insertados');
     }
 
     if (productsCount === 0) {
       const { products } = await import('./products.seeder');
       await this.productRepository.save(products);
-      console.log('📦 Seed: 15 productos insertados');
     }
 
     if (usersCount === 0) {
@@ -56,7 +54,6 @@ export class SeedService implements OnApplicationBootstrap {
       );
 
       await this.userRepository.save(hashedUsers);
-      console.log('👩🏻‍💻 Seed: 15 usuarios con contraseñas hasheadas insertados');
     }
 
     await this.userAdminSeeder.run();
@@ -69,7 +66,6 @@ export class SeedService implements OnApplicationBootstrap {
         './newsletter-subscribers.seeder'
       );
       await this.newsletterRepository.save(newsletterSubscribers);
-      console.log('📧 Seed: 6 suscriptores insertados');
     }
   }
 }

@@ -42,7 +42,5 @@ export class DogProductSeeder {
         (p) => !productosAleatorios.includes(p),
       );
     }
-
-    console.log('🔗 Productos únicos asignados aleatoriamente a los perritos.');
   }
 }

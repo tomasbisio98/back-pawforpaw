@@ -23,7 +23,5 @@ export class UserAdminSeeder {
       phone: '3224129745',
       isAdmin: true,
     });
-
-    console.log('✅ Usuario administrador creado correctamente.');
   }
 }
