@@ -11,7 +11,6 @@ export class ProductsService {
     private readonly productRepo: Repository<Products>,
   ) {}
 
-  // Listar productos con paginación
   async getProducts(
     page = 1,
     limit = 20,
@@ -25,7 +24,6 @@ export class ProductsService {
     });
   }
 
-  //Obtener un solo producto por ID
   async getProductById(id: string): Promise<Partial<Products>> {
     const product = await this.productRepo.findOne({
       where: { productId: id },
@@ -34,7 +32,6 @@ export class ProductsService {
     return product;
   }
 
-  // Crear producto nuevo y asociarlo a su categoría
   async createProduct(
     data: Partial<Products>,
   ): Promise<{ productId: string; message: string }> {
@@ -53,7 +50,6 @@ export class ProductsService {
     };
   }
 
-  //Actualizar un producto por ID
   async updateProduct(
     id: string,
     data: Partial<Products>,
@@ -62,6 +58,7 @@ export class ProductsService {
       where: { productId: id },
     });
     if (!product) throw new NotFoundException('Producto no encontrado');
+    console.log('📥 Datos recibidos para actualizar:', data);
     const updated = Object.assign(product, data);
     await this.productRepo.save(updated);
     return {
@@ -70,7 +67,6 @@ export class ProductsService {
     };
   }
 
-  // Eliminar un producto por ID
   async deactivateProduct(
     id: string,
   ): Promise<{ id: string; message: string }> {
@@ -81,8 +77,8 @@ export class ProductsService {
       throw new NotFoundException('Producto no encontrado');
     }
 
-    product.status = false; // Marcar como inactivo
-    await this.productRepo.save(product); // Guardar cambios
+    product.status = false;
+    await this.productRepo.save(product);
 
     return {
       message: 'Producto eliminado exitosamente',

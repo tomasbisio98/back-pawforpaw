@@ -4,10 +4,21 @@ import { loggerGlobal } from './middleware/logger.middleware';
 import { ValidationPipe } from '@nestjs/common';
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   // 1️⃣ Desactivar el bodyParser integrado de Nest
   const app = await NestFactory.create(AppModule, { bodyParser: false });
+
+  const swaggerConfig = new DocumentBuilder()
+    .setTitle('PI BACKEND')
+    .setVersion('1.0.0')
+    .setDescription('Esta es la documentacion de mi proyecto M4')
+    .addBearerAuth()
+    .build();
+
+  const document = SwaggerModule.createDocument(app, swaggerConfig);
+  SwaggerModule.setup('api', app, document);
 
   // 2️⃣ Middleware y validación global
   app.use(loggerGlobal);
@@ -20,12 +31,7 @@ async function bootstrap() {
   );
 
   app.enableCors({
-    origin: [
-      'http://localhost:3000',
-      'https://front-pawforpaw.vercel.app', // tu producción
-      'https://front-pawforpaw-git-dev-tomas-bisios-projects-736cb191.vercel.app',
-      'https://front-pawforpaw-one.vercel.app',
-    ],
+    origin: true,
     credentials: true,
   });
 

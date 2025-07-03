@@ -1,7 +1,6 @@
 import {
   Controller,
   Get,
-  Delete,
   Put,
   Param,
   Body,
@@ -17,7 +16,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../decorators/role/decorators.role';
 import { Role } from '../enum/roles.enum';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { validateUserUpdate } from 'src/utils/validateUserUpdate';
 
 @ApiBearerAuth()
@@ -30,6 +29,7 @@ export class UserController {
 
   @HttpCode(200)
   @Get('/list')
+  @ApiOperation({ summary: 'Get all users' })
   // @Roles(Role.Admin)
   //@UseGuards(AuthGuard, RolesGuard)
   getUsers(
@@ -40,7 +40,7 @@ export class UserController {
     @Query('status') status?: 'activo' | 'inactivo',
   ) {
     const safePage = Math.max(1, page);
-    const safeLimit = Math.min(Math.max(1, limit), 100); // Limita entre 1 y 100
+    const safeLimit = Math.min(Math.max(1, limit), 100);
     return this.usersService.getUsers(
       safePage,
       safeLimit,
@@ -51,6 +51,7 @@ export class UserController {
   }
 
   @HttpCode(200)
+  @ApiOperation({ summary: 'Get an user By Id' })
   @Get(':id')
   //@UseGuards(AuthGuard)
   getUserById(@Param('id', ParseUUIDPipe) id: string) {
@@ -58,6 +59,7 @@ export class UserController {
   }
 
   @HttpCode(200)
+  @ApiOperation({ summary: 'Update an User' })
   @Put(':id')
   // @UseGuards(AuthGuard)
   update(
@@ -66,18 +68,10 @@ export class UserController {
   ) {
     console.log('📥 Body recibido:', updateUser);
 
-    // Limpia manualmente campos undefined
     const cleanData = Object.fromEntries(
       Object.entries(updateUser).filter(([_, value]) => value !== undefined),
     );
 
     return this.usersService.update(id, cleanData as UpdateUserDto);
-  }
-
-  @HttpCode(200)
-  @Delete(':id')
-  // @UseGuards(AuthGuard)
-  remove(@Param('id', ParseUUIDPipe) id: string) {
-    return this.usersService.remove(id);
   }
 }

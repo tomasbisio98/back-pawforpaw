@@ -23,16 +23,27 @@ export class DogProductSeeder {
       return;
     }
 
+    let productosDisponibles = [...products];
+
     for (const dog of dogs) {
+      if (productosDisponibles.length === 0) break;
+
       const cantidad = Math.floor(Math.random() * 4) + 1;
-      const productosAleatorios = products
+      const maxCantidad = Math.min(cantidad, productosDisponibles.length);
+
+      const productosAleatorios = productosDisponibles
         .sort(() => 0.5 - Math.random())
-        .slice(0, cantidad);
+        .slice(0, maxCantidad);
 
       dog.products = productosAleatorios;
       await this.dogRepository.save(dog);
+
+      // Eliminar productos ya asignados
+      productosDisponibles = productosDisponibles.filter(
+        (p) => !productosAleatorios.includes(p),
+      );
     }
 
-    console.log('🔗 Productos asignados aleatoriamente a los perritos.');
+    console.log('🔗 Productos únicos asignados aleatoriamente a los perritos.');
   }
 }

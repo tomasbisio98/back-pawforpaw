@@ -17,11 +17,13 @@ import { Dog } from './entities/dog.entity';
 import { AssignProductsDto } from './dto/assing-products.dto';
 import { Products } from 'src/products/entities/products.entity';
 import { StatusGuard } from 'src/auth/guards/status.guard';
+import { ApiOperation } from '@nestjs/swagger';
 
 @Controller('dogs')
 export class DogsController {
   constructor(private readonly dogsService: DogsService) {}
 
+  @ApiOperation({ summary: 'Get all users' })
   @Get()
   async findAll(
     @Query('name') name?: string,
@@ -43,6 +45,7 @@ export class DogsController {
     });
   }
 
+  @ApiOperation({ summary: 'Get a dog by Id' })
   @Get(':id')
   async findOne(
     @Param('id') id: string,
@@ -55,6 +58,7 @@ export class DogsController {
     return dog;
   }
 
+  @ApiOperation({ summary: 'Get products Associated with an specific dog' })
   @Get(':id/products')
   getProductsByDog(
     @Param('id', ParseUUIDPipe) dogId: string,
@@ -62,17 +66,20 @@ export class DogsController {
     return this.dogsService.getProductsByDog(dogId);
   }
 
+  @ApiOperation({ summary: 'Create a new Dog' })
   @Post()
   create(@Body() createDogDto: CreateDogDto): Promise<Dog> {
     console.log('🎯 Datos recibidos:', createDogDto);
     return this.dogsService.create(createDogDto);
   }
 
+  @ApiOperation({ summary: 'Update a dog' })
   @Put(':id')
   update(@Param('id') id: string, @Body() updateDogDto: UpdateDogDto) {
     return this.dogsService.update(id, updateDogDto);
   }
 
+  @ApiOperation({ summary: 'Assign a product to an specific dog' })
   @Patch(':id/products')
   assignProductsToDo(
     @Param('id', ParseUUIDPipe) dogId: string,

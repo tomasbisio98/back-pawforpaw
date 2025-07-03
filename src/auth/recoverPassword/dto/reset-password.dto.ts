@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsNotEmpty,
   IsStrongPassword,
@@ -6,9 +7,17 @@ import {
 } from 'class-validator';
 
 export class ResetPasswordDto {
+  @ApiProperty({
+    description: 'Token enviado a tu correo electronico',
+    example: '123456',
+  })
   @IsNotEmpty({ message: 'Token requerido' })
   token: string;
 
+  @ApiProperty({
+    description: 'Nueva password',
+    example: 'Hola1234!',
+  })
   @IsNotEmpty({ message: 'Contraseña requerida' })
   @MinLength(8, { message: 'Mínimo 8 caracteres' })
   @MaxLength(20, { message: 'Máximo 20 caracteres' })
