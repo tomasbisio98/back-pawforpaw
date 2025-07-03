@@ -13,7 +13,9 @@ async function bootstrap() {
   const swaggerConfig = new DocumentBuilder()
     .setTitle('PI BACKEND')
     .setVersion('1.0.0')
-    .setDescription('Esta es la documentacion de mi proyecto M4')
+    .setDescription(
+      'API para la gestión de perritos en adopción, productos disponibles para donación, usuarios y suscripciones a newsletter. Permite administrar de forma eficiente los procesos de alta, consulta, actualización y baja, facilitando el seguimiento de las donaciones y el estado de cada perrito dentro de la fundación',
+    )
     .addBearerAuth()
     .build();
 
