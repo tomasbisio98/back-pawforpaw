@@ -30,6 +30,11 @@ export class AuthService {
     if (!isPasswordMatch) {
       throw new BadRequestException('¡Credenciales inválidas!');
     }
+    if (user.isBanned) {
+      throw new UnauthorizedException(
+        'Tu cuenta ha sido baneada. Contacte al administrador.',
+      );
+    }
 
     if (!user.status) {
       throw new UnauthorizedException(

@@ -68,6 +68,9 @@ export class User {
   })
   authProvider: 'google' | 'local';
 
+  @Column({ default: false })
+  isBanned: boolean;
+
   @CreateDateColumn({
     type: 'date',
   })

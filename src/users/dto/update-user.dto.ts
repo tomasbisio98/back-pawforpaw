@@ -33,4 +33,8 @@ export class UpdateUserDto {
   @IsOptional()
   @IsString()
   profileImgUrl?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isBanned?: boolean;
 }
