@@ -14,6 +14,7 @@ import { StripeService } from 'src/stripe/stripe.service';
 import { Roles } from 'src/decorators/role/decorators.role';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Role } from 'src/enum/roles.enum';
+import { ApiOperation } from '@nestjs/swagger';
 
 @Controller('donations')
 export class DonationController {
@@ -22,17 +23,19 @@ export class DonationController {
     private readonly stripeService: StripeService,
   ) {}
 
-  // Rutas públicas
+  @ApiOperation({ summary: 'Get all donations' })
   @Get('success')
   handleSuccess(@Query('donationId') donationId: string) {
     return { status: 'success', donationId };
   }
 
+  @ApiOperation({ summary: 'Cancel donations' })
   @Get('cancel')
   handleCancel() {
     return { status: 'canceled' };
   }
-  // Rutas protegidas
+
+  @ApiOperation({ summary: 'Get donations by user' })
   @Get('mine')
   @Roles(Role.Admin)
   @UseGuards(AuthGuard, RolesGuard)
@@ -47,6 +50,7 @@ export class DonationController {
     return this.donationService.getDonationByUser(userId, pageNum, limitNum);
   }
 
+  @ApiOperation({ summary: 'Create a new donation' })
   @Post('checkout')
   @UseGuards(AuthGuard)
   async checkout(@Request() req, @Body() dto: CreateDonationDto) {
@@ -60,9 +64,10 @@ export class DonationController {
     );
 
     console.log('🔗 Stripe session:', session);
-    return { url: session.url }; // ✅ DEVUELVE SOLO LA URL
+    return { url: session.url };
   }
 
+  @ApiOperation({ summary: 'Get donations history' })
   @Get('historial')
   async getHistorial() {
     return this.donationService.getHistorial();

@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { FilesService } from './file.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiOperation } from '@nestjs/swagger';
 
 @Controller('file')
 export class FileController {
@@ -29,6 +30,7 @@ export class FileController {
     ],
   });
 
+  @ApiOperation({ summary: 'Upload a photo for products with cloudinary' })
   @Post('uploadImage/:productId')
   @UseInterceptors(FileInterceptor('file'))
   uploadProductImage(
@@ -39,6 +41,7 @@ export class FileController {
     return this.fileService.uploadProductImage(file, productId);
   }
 
+  @ApiOperation({ summary: 'Upload a photo for dogs with cloudinary' })
   @Post('uploadDogImage/:dogId')
   @UseInterceptors(FileInterceptor('file'))
   uploadDogImage(
@@ -61,6 +64,7 @@ export class FileController {
     return this.fileService.uploadDogImage(file, dogId);
   }
 
+  @ApiOperation({ summary: 'Upload a photo for User with cloudinary' })
   @Post('uploadUserImage/:userId')
   @UseInterceptors(FileInterceptor('file'))
   uploadUserImage(
