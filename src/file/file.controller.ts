@@ -35,7 +35,19 @@ export class FileController {
   @UseInterceptors(FileInterceptor('file'))
   uploadProductImage(
     @Param('productId', ParseUUIDPipe) productId: string,
-    @UploadedFile()
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({
+            maxSize: 1000000, // 1 MB
+            message: 'El archivo es demasiado grande. Máx. 1MB.',
+          }),
+          new FileTypeValidator({
+            fileType: /image\/(jpeg|jpg|png|webp)/,
+          }),
+        ],
+      }),
+    )
     file: Express.Multer.File,
   ) {
     return this.fileService.uploadProductImage(file, productId);
@@ -73,5 +85,26 @@ export class FileController {
     file: Express.Multer.File,
   ) {
     return this.fileService.uploadUserImage(file, userId);
+  }
+
+  @Post('uploadProductImage')
+  @UseInterceptors(FileInterceptor('file'))
+  uploadProductImageOnly(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({
+            maxSize: 1000000, // 1 MB
+            message: 'El archivo es demasiado grande. Máx. 1MB.',
+          }),
+          new FileTypeValidator({
+            fileType: /image\/(jpeg|jpg|png|webp)/,
+          }),
+        ],
+      }),
+    )
+    file: Express.Multer.File,
+  ) {
+    return this.fileService.uploadProductImageOnly(file); // ✅ ahora existe
   }
 }

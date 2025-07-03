@@ -6,6 +6,10 @@ import {
   Get,
   UseGuards,
   Query,
+  Patch,
+  Param,
+  BadRequestException,
+  NotFoundException,
 } from '@nestjs/common';
 import { DonationService } from './donations.service';
 import { CreateDonationDto } from './dto/createDonations.dto';
@@ -71,5 +75,26 @@ export class DonationController {
   @Get('historial')
   async getHistorial() {
     return this.donationService.getHistorial();
+  }
+
+  @Patch(':id/status')
+  async actualizarEstadoDonacionPublica(
+    @Param('id') id: string,
+    @Body('status') status: string,
+  ) {
+    if (status !== 'CANCELED') {
+      throw new BadRequestException(
+        'Solo se permite marcar como CANCELADO desde el público',
+      );
+    }
+
+    return this.donationService.updateStatus(id, 'CANCELED');
+  }
+
+  @Get(':donationId/status')
+  async getDonationStatus(@Param('donationId') donationId: string) {
+    const donation = await this.donationService.findOneBy({ donationId });
+    if (!donation) throw new NotFoundException('Donación no encontrada');
+    return { status: donation.status };
   }
 }

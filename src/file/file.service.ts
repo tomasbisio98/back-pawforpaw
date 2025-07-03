@@ -65,4 +65,11 @@ export class FilesService {
 
     return { imageUrl: uploadResponse.secure_url };
   }
+
+  async uploadProductImageOnly(file: Express.Multer.File) {
+    const uploadResponse = await this.fileRepository.uploadImage(file);
+    return {
+      imageUrl: uploadResponse.secure_url,
+    };
+  }
 }
