@@ -13,7 +13,7 @@ export class NewsletterCron {
     private readonly newsletterService: NewsletterService,
   ) {}
 
-  @Cron('30 2 * * 3') // Todos los miércoles a las 10:00 AM
+  @Cron('30 17 * * 4') // Todos los jueves a las 14:30 PM de Argentina
   async handleWeeklyDogReport() {
     await this.sendWeeklyDogReport();
   }

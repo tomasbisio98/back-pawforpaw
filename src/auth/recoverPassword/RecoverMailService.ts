@@ -14,11 +14,19 @@ export class RecoverMailService {
       to: user.email,
       subject: '🔑 Recupera tu contraseña',
       html: `
-        <h2>Hola ${user.name ?? 'usuario'},</h2>
-        <p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p>
-        <p><a href="${recoveryUrl}" target="_blank">${recoveryUrl}</a></p>
-        <p>Este enlace expirará en 1 hora.</p>
-      `,
+    <div style="font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 20px; background-color: #ffffff; color: #333333; border-radius: 8px;">
+      <h2 style="color: #e67e22; text-align: center;">Hola ${user.name ?? 'usuario'},</h2>
+      <p style="font-size: 16px; line-height: 1.5; text-align: center;">
+        Haz clic en el siguiente enlace para restablecer tu contraseña:
+      </p>
+      <p style="text-align: center; margin: 20px 0;">
+        <a href="${recoveryUrl}" target="_blank" style="color: #e67e22; word-break: break-all;">${recoveryUrl}</a>
+      </p>
+      <p style="font-size: 14px; line-height: 1.5; color: #555; text-align: center;">
+        Este enlace expirará en 1 hora.
+      </p>
+    </div>
+  `,
     });
   }
 }

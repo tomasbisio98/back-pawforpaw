@@ -85,17 +85,21 @@ export class DogsService {
     const savedDog = await this.dogRepository.save(newDog);
 
     const subscribers = await this.newsletterService.getAllSubscribers();
-
     const emailPromises = subscribers.map((sub) =>
       this.newsletterService.sendCustomEmail(
         sub.email,
         `🐶 ¡Nuevo perrito necesita ayuda: ${savedDog.name}!`,
         `
-          <h2>Conocé a ${savedDog.name}</h2>
-          <p><strong>Ciudad:</strong> ${savedDog.city}</p>
-          <p><strong>Descripción:</strong> ${savedDog.description}</p>
-          <p>Visita nuestra web para conocer más o colaborar con su causa.</p>
-        `,
+      <div style="font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 20px; background-color: #ffffff; color: #333333; border-radius: 8px;">
+        <h2 style="color: #2c3e50; text-align: center;">🐾 Conocé a ${savedDog.name} y a todos nuestros perritos!</h2>
+        <p style="font-size: 16px; line-height: 1.5;"><strong>📍 Ciudad:</strong> ${savedDog.city}</p>
+        <p style="font-size: 16px; line-height: 1.5;"><strong>📝 Descripción:</strong> ${savedDog.description}</p>
+        <p style="font-size: 16px; line-height: 1.5;">Visita nuestra web para conocer más o colaborar con su causa.</p>
+        <div style="text-align: center; margin-top: 20px;">
+          <a href="https://front-pawforpaw-one.vercel.app/perritos" style="background-color: #e67e22; color: #ffffff; text-decoration: none; padding: 12px 20px; border-radius: 5px; font-weight: bold; display: inline-block;">Conocer a ${savedDog.name}</a>
+        </div>
+      </div>
+    `,
       ),
     );
 
